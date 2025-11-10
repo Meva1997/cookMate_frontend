@@ -1,0 +1,240 @@
+export default function RecipeInfo() {
+  return (
+    <main className="container mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
+      <div className="overflow-hidden rounded-xl shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05)] bg-[#f8f5f2] dark:bg-[#2a2a2a]">
+        <div
+          className="aspect-3/2 w-full bg-cover bg-center rounded-t-xl"
+          style={{
+            backgroundImage:
+              "url('https://lh3.googleusercontent.com/aida-public/AB6AXuDFM4ybV1JfbXxpJt71faPU2-DOSvOTVQPGxPKUv5-n5YeRg4QZ-O1vKD4Jgfx3SjXnrn31RgI3XmdMYPjn2Cj4ywpLKs-x4RUiktdJaCzcGG_Gf7NSF-pmaxIEU5yb5DjgXkIPaXXoXQkmHoPrnDDa9ay8DnPnpNyOLXWBcnDibX8Y5kHb-PKFhLCmBUkd8J_iTO0RLa5Z_snHPIEzjmCQspL6np8IfB_-MKbLnv0f9WU1t8RNJd7keEs_U171_IYlD2D-ZVHI9d4')",
+          }}
+        />
+
+        <div className="p-6 md:p-8">
+          <h1 className="text-3xl font-bold tracking-tight text-[#1f1f1f] dark:text-[#f0eade] sm:text-4xl">
+            Creamy Tomato Pasta
+          </h1>
+          <p className="mt-2 text-sm text-[#a1a1a1] dark:text-[#8a8a8a]">
+            By{" "}
+            <a
+              className="font-medium text-[#a1a1a1] dark:text-[#d2b48c] hover:opacity-90"
+              href="#"
+            >
+              Sarah Miller
+            </a>
+            &nbsp;· In&nbsp;
+            <a
+              className="font-medium text-[#a1a1a1] dark:text-[#d2b48c] hover:opacity-90"
+              href="#"
+            >
+              Pasta
+            </a>
+          </p>
+
+          <div className="mt-4 flex items-center gap-6">
+            <button
+              className="flex items-center gap-2 text-[#a1a1a1] dark:text-[#8a8a8a] hover:text-[#d2b48c]"
+              aria-label="likes"
+            >
+              <svg
+                fill="currentColor"
+                height="24"
+                viewBox="0 0 256 256"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M178,32c-20.65,0-38.73,8.88-50,23.89C116.73,40.88,98.65,32,78,32A62.07,62.07,0,0,0,16,94c0,70,103.79,126.66,108.21,129a8,8,0,0,0,7.58,0C136.21,220.66,240,164,240,94A62.07,62.07,0,0,0,178,32ZM128,206.8C109.74,196.16,32,147.69,32,94A46.06,46.06,0,0,1,78,48c19.45,0,35.78,10.36,42.6,27a8,8,0,0,0,14.8,0c6.82-16.67,23.15-27,42.6-27a46.06,46.06,0,0,1,46,46C224,147.61,146.24,196.15,128,206.8Z" />
+              </svg>
+              <span className="text-sm font-medium">234</span>
+            </button>
+
+            <button
+              className="flex items-center gap-2 text-[#a1a1a1] dark:text-[#8a8a8a] hover:text-[#d2b48c]"
+              aria-label="bookmarks"
+            >
+              <svg
+                fill="currentColor"
+                height="24"
+                viewBox="0 0 256 256"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M184,32H72A16,16,0,0,0,56,48V224a8,8,0,0,0,12.24,6.78L128,193.43l59.77,37.35A8,8,0,0,0,200,224V48A16,16,0,0,0,184,32Zm0,177.57-51.77-32.35a8,8,0,0,0-8.48,0L72,209.57V48H184Z" />
+              </svg>
+              <span className="text-sm font-medium">123</span>
+            </button>
+          </div>
+
+          <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-3">
+            <div className="md:col-span-1">
+              <h3 className="text-xl font-bold text-[#1f1f1f] dark:text-[#f0eade]">
+                Ingredients
+              </h3>
+              <ul className="mt-4 space-y-3">
+                {[
+                  "1 lb pasta",
+                  "1 cup cherry tomatoes",
+                  "1/2 cup heavy cream",
+                  "1/4 cup grated Parmesan cheese",
+                  "2 cloves garlic, minced",
+                  "2 tbsp olive oil",
+                  "Salt and pepper to taste",
+                ].map((ing) => (
+                  <li key={ing} className="flex items-center gap-3">
+                    <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#19e6a2] dark:bg-[#c9ad80]">
+                      <svg
+                        fill="currentColor"
+                        height="20"
+                        viewBox="0 0 256 256"
+                        width="20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Z" />
+                      </svg>
+                    </span>
+                    <span className="text-sm text-[#1f1f1f] dark:text-[#f0eade]">
+                      {ing}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="md:col-span-2">
+              <h3 className="text-xl font-bold text-[#1f1f1f] dark:text-[#f0eade]">
+                Instructions
+              </h3>
+              <ol className="mt-4 space-y-4">
+                {[
+                  "Cook pasta according to package instructions.",
+                  "While pasta is cooking, heat olive oil in a pan over medium heat.",
+                  "Add minced garlic and cook for 1 minute until fragrant.",
+                  "Add cherry tomatoes and cook for 5 minutes until they start to soften.",
+                  "Stir in heavy cream and Parmesan cheese. Season with salt and pepper.",
+                  "Drain pasta and add it to the sauce. Toss to coat.",
+                  "Serve immediately and garnish with extra Parmesan cheese if desired.",
+                ].map((step, i) => (
+                  <li key={i} className="flex gap-4">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#19e6a2] dark:bg-[#c9ad80] font-semibold">
+                      {i + 1}
+                    </div>
+                    <p className="text-sm text-[#1f1f1f] dark:text-[#f0eade]">
+                      {step}
+                    </p>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </div>
+
+          <div
+            className="mt-10 border-t"
+            style={{ borderColor: "rgba(210,180,140,0.2)" }}
+          >
+            <div className="pt-8">
+              <h3 className="text-xl font-bold text-[#1f1f1f] dark:text-[#f0eade]">
+                Comments
+              </h3>
+              <div className="mt-4 space-y-6">
+                <div className="flex items-start gap-4">
+                  <div
+                    className="h-10 w-10 shrink-0 rounded-full bg-cover bg-center"
+                    style={{
+                      backgroundImage:
+                        "url('https://picsum.photos/seed/c1/200')",
+                    }}
+                  />
+                  <div className="flex-1">
+                    <form className="relative">
+                      <input
+                        className="w-full rounded-lg p-4 pr-28 text-sm border-2 border-[#19e6a2] dark:border-[#c9ad80] focus:outline-none focus:ring-2 focus:ring-[#19e6a2] dark:focus:ring-[#c9ad80]"
+                        placeholder="Add a comment..."
+                      />
+                      <button className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md px-4 py-2 font-semibold bg-[#19e6a2] dark:bg-[#c9ad80] text-[#0f172a] ">
+                        Post
+                      </button>
+                    </form>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <div
+                    className="h-10 w-10 shrink-0 rounded-full bg-cover bg-center"
+                    style={{
+                      backgroundImage:
+                        "url('https://picsum.photos/seed/c2/200')",
+                    }}
+                  />
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm font-semibold text-[#1f1f1f] dark:text-[#f0eade]">
+                        Emily Carter
+                      </p>
+                      <p className="text-xs text-[#8a8a8a]">2 weeks ago</p>
+                    </div>
+                    <p className="mt-1 text-sm text-[#1f1f1f] dark:text-[#f0eade]">
+                      This recipe is amazing! So easy and delicious. My family
+                      loved it.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <div
+                    className="h-10 w-10 shrink-0 rounded-full bg-cover bg-center"
+                    style={{
+                      backgroundImage:
+                        "url('https://picsum.photos/seed/c3/200')",
+                    }}
+                  />
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm font-semibold text-[#1f1f1f] dark:text-[#f0eade]">
+                        David Lee
+                      </p>
+                      <p className="text-xs text-[#8a8a8a]">1 week ago</p>
+                    </div>
+                    <p className="mt-1 text-sm text-[#1f1f1f] dark:text-[#f0eade]">
+                      I added some grilled chicken to this and it was perfect.
+                      Thanks for sharing!
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            className="mt-10 border-t"
+            style={{ borderColor: "rgba(210,180,140,0.2)" }}
+          >
+            <div className="pt-8">
+              <h3 className="text-xl font-bold text-[#1f1f1f] dark:text-[#f0eade]">
+                Similar Recipes
+              </h3>
+              <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3 md:gap-x-6">
+                {["Pesto Pasta", "Garlic Shrimp Pasta", "Mushroom Pasta"].map(
+                  (t, i) => (
+                    <a key={t} className="group" href="#">
+                      <div className="aspect-video w-full overflow-hidden rounded-lg shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05)]">
+                        <div
+                          className="h-full w-full bg-cover bg-center transition-transform duration-300 group-hover:scale-105"
+                          style={{
+                            backgroundImage: `url('https://picsum.photos/seed/sim-${i}/600')`,
+                          }}
+                        />
+                      </div>
+                      <p className="mt-2 text-sm font-medium text-[#1f1f1f] dark:text-[#f0eade] group-hover:text-[#d2b48c]">
+                        {t}
+                      </p>
+                    </a>
+                  )
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  );
+}

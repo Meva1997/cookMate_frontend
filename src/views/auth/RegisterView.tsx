@@ -2,12 +2,12 @@ import { NavLink } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { isAxiosError } from "axios";
 import { toast } from "sonner";
-import type { RegisterForm } from "../types";
-import ErrorMessage from "../components/ErrorMessage";
-import api from "../config/axios";
+import type { RegisterForm } from "../../types";
+import ErrorMessage from "../../components/ErrorMessage";
+import api from "../../config/axios";
 import { useState } from "react";
-import ShowPassword from "../components/ShowPassword";
-import HidePassword from "../components/HidePassword";
+import ShowPassword from "../../components/ShowPassword";
+import HidePassword from "../../components/HidePassword";
 
 export default function RegisterView() {
   const [showPassword, setShowPassword] = useState(false);

@@ -1,8 +1,8 @@
 import { NavLink } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import ErrorMessage from "../components/ErrorMessage";
-import type { LoginForm } from "../types";
-import api from "../config/axios";
+import ErrorMessage from "../../components/ErrorMessage";
+import type { LoginForm } from "../../types";
+import api from "../../config/axios";
 import { toast } from "sonner";
 import { isAxiosError } from "axios";
 

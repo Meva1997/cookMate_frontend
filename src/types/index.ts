@@ -12,3 +12,12 @@ export type RegisterForm = Pick<User, "handle" | "name" | "email"> & {
 export type LoginForm = Pick<User, "email"> & {
   password: string;
 };
+
+export type CreateRecipeForm = {
+  title: string;
+  description: string;
+  ingredients: string;
+  instructions: string;
+  category: string;
+  author: string;
+};
