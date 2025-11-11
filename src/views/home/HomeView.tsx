@@ -1,4 +1,7 @@
 import { Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { getAllUsers } from "../../api/CookMateAPI";
+import HomeUsersView from "./HomeUsersView";
 
 export default function HomeView() {
   const cards = [
@@ -45,6 +48,21 @@ export default function HomeView() {
       image: "https://picsum.photos/seed/pizza/800",
     },
   ];
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["getAllUsers"],
+    queryFn: getAllUsers,
+    retry: 1,
+    refetchOnWindowFocus: false,
+  });
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (isError) {
+    return <div>Error loading users.</div>;
+  }
   return (
     <>
       <section className="mb-12">
@@ -106,6 +124,18 @@ export default function HomeView() {
           ))}
         </div>
       </section>
+
+      {/* Users Section */}
+      {data && (
+        <section className="mt-16">
+          <h2 className="text-2xl font-bold mb-6">Our Community</h2>
+          {Array.isArray(data) ? (
+            <HomeUsersView data={data} />
+          ) : (
+            <div className="text-sm text-red-600">Unable to load users.</div>
+          )}
+        </section>
+      )}
     </>
   );
 }

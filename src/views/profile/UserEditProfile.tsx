@@ -1,12 +1,19 @@
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { useQueryClient } from "@tanstack/react-query";
 import type { User } from "../../types";
 
 export default function UserEditProfile() {
+  const { userId } = useParams<{ userId: string }>();
+
+  const queryClient = useQueryClient();
+
+  const data = queryClient.getQueryData<User>(["userProfile", userId]); //use the userId to get the correct data from the cache of userProfile fetched on UserProfileView
+
   const initiaValues: User = {
-    handle: "",
-    name: "",
-    email: "",
+    handle: data?.handle || "",
+    name: data?.name || "",
+    email: data?.email || "",
   };
 
   const { register, handleSubmit } = useForm({ defaultValues: initiaValues });
@@ -83,7 +90,7 @@ export default function UserEditProfile() {
 
           <div className="pt-4 flex space-x-2 justify-end">
             <Link
-              to="/admin"
+              to={`/admin/${userId}`}
               className="w-full sm:w-auto px-8 py-3 font-bold rounded-lg focus:outline-none transition-all shadow-sm hover:shadow-md bg-[#f8f5f2] hover:bg-gray-400 dark:bg-[#2a2a2a] dark:hover:bg-[#a4885a] text-[#1f1f1f] dark:text-[#e2e8f0] border border-[#e2e8f0] dark:border-[#3a3a3a]"
             >
               Cancel

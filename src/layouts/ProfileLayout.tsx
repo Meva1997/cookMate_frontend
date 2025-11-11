@@ -1,19 +1,7 @@
-// import { useQuery } from "@tanstack/react-query";
 import { Outlet, Link } from "react-router-dom";
 import { Toaster } from "sonner";
-// import { getUser } from "../api/CookMateAPI";
 
 export default function ProfileLayout() {
-  // const { userId } = useParams<{ userId: string }>();
-
-  // const { data, isLoading, error, isError } = useQuery({
-  //   queryKey: ["getUser", userId],
-  //   queryFn: () => getUser(userId!),
-  //   enabled: !!userId, // solo ejecutar si userId está definido
-  // });
-
-  // console.log("🚀 ~ ProfileLayout ~ data:", data);
-
   return (
     <div className="min-h-screen bg-[#f6f8f7] dark:bg-black font-display text-slate-800 dark:text-slate-200">
       <div className="relative flex min-h-screen w-full flex-col">
