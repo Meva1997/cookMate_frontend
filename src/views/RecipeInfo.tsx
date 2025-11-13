@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getRecipeById } from "../api/CookMateAPI";
 import { Link, useParams } from "react-router-dom";
 import Spinner from "../components/Spinner";
@@ -6,6 +6,7 @@ import Spinner from "../components/Spinner";
 export default function RecipeInfo() {
   const { recipeId } = useParams<{ recipeId: string }>();
   const { userId } = useParams<{ userId: string }>();
+  console.log("🚀 ~ RecipeInfo ~ userId:", userId);
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["recipeInfo", recipeId],
@@ -13,11 +14,6 @@ export default function RecipeInfo() {
     retry: 1,
     refetchOnWindowFocus: false,
   });
-
-  const queryClient = useQueryClient();
-
-  const userIdData = queryClient.getQueryData(["userProfile"]);
-  console.log("🚀 ~ RecipeInfo ~ userIdData:", userIdData);
 
   if (isLoading) {
     return (
@@ -44,7 +40,7 @@ export default function RecipeInfo() {
       <main className="container mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
         <section className="flex space-x-2">
           <div className="mb-4 p-2 dark:bg-[#c9ad80] rounded-lg w-1/4 dark:text-black font-bold text-center dark:hover:bg-[#bfa46f] cursor-pointer transition-colors bg-[#19e6a2] text-white hover:bg-[#16a085]">
-            <Link to={`/admin/${userId}`}>Back to profile</Link>
+            <Link to={`/admin/${userId}`}>Go to profile</Link>
           </div>
           <div className="mb-4 p-2 dark:bg-[#c9ad80] rounded-lg w-1/4 dark:text-black font-bold text-center dark:hover:bg-[#bfa46f] cursor-pointer transition-colors bg-[#19e6a2] text-white hover:bg-[#16a085]">
             <Link to={"/home"}>Back to home</Link>
