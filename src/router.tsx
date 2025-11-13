@@ -19,13 +19,16 @@ export default function Router() {
           <Route path="/auth/register" element={<RegisterView />} />
         </Route>
         <Route path="/admin" element={<ProfileLayout />}>
+          <Route path="create-recipe/:userId" element={<CreateRecipe />} />
           <Route path=":userId" element={<UserProfileView />} />
-          <Route path="create-recipe" element={<CreateRecipe />} />
-          <Route path="edit-profile" element={<UserEditProfile />} />
+          <Route path=":userId/edit" element={<UserEditProfile />} />
         </Route>
         <Route path="/" element={<HomeLayout />}>
           <Route path="/home" element={<HomeView />} />
-          <Route path="/recipe/" element={<RecipeInfo />} />
+          <Route
+            path="/user/:userId/recipe/:recipeId"
+            element={<RecipeInfo />}
+          />
         </Route>
       </Routes>
     </BrowserRouter>
