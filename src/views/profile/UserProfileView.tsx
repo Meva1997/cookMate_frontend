@@ -68,7 +68,7 @@ export default function UserProfileView() {
 
         <nav className="flex gap-2">
           <Link
-            to="/admin/create-recipe"
+            to={`/admin/create-recipe/${userId}`}
             className="px-5 py-2 rounded-lg bg-[#d2b48c]/20 dark:bg-[#d2b48c]/20 hover:bg-[#d2b48c]/30 dark:hover:bg-[#d2b48c]/30 text-[#d2b48c] font-bold text-sm transition-colors"
           >
             Create Recipe
@@ -126,7 +126,7 @@ export default function UserProfileView() {
           role="tabpanel"
           hidden={activeTab !== "recipes"}
         >
-          {activeTab === "recipes" && <UserRecipes recipes={user?.recipes} />}
+          {activeTab === "recipes" && <UserRecipes user={user!} />}
         </div>
       </div>
 
@@ -136,9 +136,7 @@ export default function UserProfileView() {
         role="tabpanel"
         hidden={activeTab !== "favorites"}
       >
-        {activeTab === "favorites" && (
-          <UserFavorites favorites={user?.favorites} />
-        )}
+        {activeTab === "favorites" && <UserFavorites user={user!} />}
       </div>
     </>
   );

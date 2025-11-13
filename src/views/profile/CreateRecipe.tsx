@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import type { CreateRecipeForm } from "../../types";
 import ErrorMessage from "../../components/ErrorMessage";
@@ -7,13 +7,14 @@ import { toast } from "sonner";
 import { isAxiosError } from "axios";
 
 export default function CreateRecipe() {
+  const { userId } = useParams<{ userId: string }>();
   const initialValues: CreateRecipeForm = {
     title: "",
     description: "",
     ingredients: "",
     instructions: "",
     category: "",
-    author: "6906259b22a3fccd708689d6", // hardcoded for now
+    author: userId!,
   };
   const {
     register,
@@ -23,7 +24,20 @@ export default function CreateRecipe() {
   } = useForm({ defaultValues: initialValues });
 
   const handleCreateRecipe = (formData: CreateRecipeForm) => {
-    const createRecipePromise = api.post("/recipes", formData);
+    const recipeData = {
+      ...formData,
+      author: userId ?? formData.author,
+      ingredients: formData.ingredients
+        .split("\n")
+        .map((ing) => ing.trim())
+        .filter((ing) => ing.length > 0), // process ingredients
+      instructions: formData.instructions
+        .split("\n")
+        .map((step) => step.trim())
+        .filter((step) => step.length > 0), // process instructions
+    };
+
+    const createRecipePromise = api.post("/recipes", recipeData);
 
     // show toast tied to the axios promise; success receives the full response
     toast.promise(createRecipePromise, {
@@ -42,18 +56,6 @@ export default function CreateRecipe() {
       },
     });
   };
-
-  // "primary": "#19e6a2",
-  //           "background-light": "#f6f8f7",
-  //           "background-dark": "#11211c",
-  //           "surface-light": "#ffffff",
-  //           "surface-dark": "#1a2e28",
-  //           "text-light": "#0f172a",
-  //           "text-dark": "#e2e8f0",
-  //           "subtle-light": "#64748b",
-  //           "subtle-dark": "#94a3b8",
-  //           "border-light": "#e2e8f0",
-  //           "border-dark": "#334155",
 
   return (
     <main className="flex grow container max-w-5xl mx-auto py-8 md:py-12">
@@ -227,14 +229,14 @@ export default function CreateRecipe() {
 
           <input
             type="hidden"
-            value={"6906259b22a3fccd708689d6"}
             id="author"
+            value={userId ?? ""}
             {...register("author")}
           />
 
           <div className="pt-4 flex space-x-2 justify-end">
             <Link
-              to="/admin"
+              to={`/admin/${userId}`}
               className="w-full sm:w-auto px-8 py-3 font-bold rounded-lg focus:outline-none transition-all shadow-sm hover:shadow-md bg-[#f8f5f2] hover:bg-gray-400 dark:bg-[#2a2a2a] dark:hover:bg-[#a4885a] text-[#1f1f1f] dark:text-[#e2e8f0] border border-[#e2e8f0] dark:border-[#3a3a3a]"
             >
               Back to Profile
