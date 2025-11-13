@@ -67,3 +67,14 @@ export async function getUserFavorites(userId: string) {
     }
   }
 }
+
+export async function getAllRecipes() {
+  try {
+    const { data } = await api.get<RecipeArray[]>(`/recipes`);
+    return data;
+  } catch (err) {
+    if (isAxiosError(err) && err.response?.data?.error) {
+      return String(err.response.data.error);
+    }
+  }
+}

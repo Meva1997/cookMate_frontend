@@ -1,10 +1,11 @@
 import { Link, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import type { CreateRecipeForm } from "../../types";
-import ErrorMessage from "../../components/ErrorMessage";
-import api from "../../config/axios";
 import { toast } from "sonner";
 import { isAxiosError } from "axios";
+import api from "../../config/axios";
+import type { CreateRecipeForm } from "../../types";
+import ErrorMessage from "../../components/ErrorMessage";
+import { categories } from "../../db";
 
 export default function CreateRecipe() {
   const { userId } = useParams<{ userId: string }>();
@@ -172,11 +173,11 @@ export default function CreateRecipe() {
                 required: "Category is required",
               })}
             >
-              <option>Select a category</option>
-              <option value={"Breakfast"}>Breakfast</option>
-              <option value={"Lunch"}>Lunch</option>
-              <option value={"Dinner"}>Dinner</option>
-              <option value={"Dessert"}>Dessert</option>
+              {categories.map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
+              ))}
             </select>
             {errors.category && (
               <ErrorMessage>{errors.category.message}</ErrorMessage>
