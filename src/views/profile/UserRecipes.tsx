@@ -50,6 +50,13 @@ export default function UserRecipes({ user }: UserRecipesProps) {
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                   {recipe.title}
                 </h3>
+                {recipe.image && (
+                  <img
+                    src={recipe.image}
+                    alt={recipe.title}
+                    className="mt-4 rounded-md max-h-40 w-full object-cover"
+                  />
+                )}
                 <p className="mt-2 text-gray-600 dark:text-gray-300">
                   {recipe.description}
                 </p>
