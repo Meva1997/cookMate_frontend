@@ -78,3 +78,16 @@ export async function getAllRecipes() {
     }
   }
 }
+
+export async function uploadRecipeImage(file: File) {
+  const formData = new FormData();
+  formData.append("file", file);
+  try {
+    const { data } = await api.post(`/recipes/upload-image`, formData);
+    return data;
+  } catch (err) {
+    if (isAxiosError(err) && err.response?.data?.error) {
+      return String(err.response.data.error);
+    }
+  }
+}

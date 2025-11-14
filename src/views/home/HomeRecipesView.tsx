@@ -4,6 +4,7 @@ import { getAllRecipes } from "../../api/CookMateAPI";
 import Spinner from "../../components/Spinner";
 import { useState } from "react";
 import { categories } from "../../db";
+import type { RecipeArray } from "../../types";
 
 export default function HomeRecipesView() {
   const [selectedCategory, setSelectedCategory] = useState("All");

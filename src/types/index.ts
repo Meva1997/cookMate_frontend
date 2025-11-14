@@ -26,6 +26,7 @@ export type CreateRecipeForm = {
   ingredients: string;
   instructions: string;
   category: string;
+  image: string;
   author: string;
 };
 
@@ -36,6 +37,7 @@ export type RecipeArray = {
   ingredients: string[];
   instructions: string[];
   category: string;
+  image: string;
   author: string;
   likes: string[];
   favorites: string[];
