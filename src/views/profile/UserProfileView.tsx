@@ -5,6 +5,7 @@ import UserFavorites from "./UserFavorites";
 import { useQuery } from "@tanstack/react-query";
 import { getUserById } from "../../api/CookMateAPI";
 import Spinner from "../../components/Spinner";
+import LogoutButton from "../../components/LogoutButton";
 
 export default function UserProfileView() {
   const [activeTab, setActiveTab] = useState<"recipes" | "favorites">(
@@ -79,6 +80,7 @@ export default function UserProfileView() {
           >
             Edit profile
           </Link>
+          <LogoutButton />
         </nav>
 
         <section className="mt-12 w-full">

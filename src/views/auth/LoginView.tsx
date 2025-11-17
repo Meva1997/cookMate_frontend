@@ -1,12 +1,13 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import ErrorMessage from "../../components/ErrorMessage";
 import type { LoginForm } from "../../types";
-import api from "../../config/axios";
+import api, { setAuthToken } from "../../config/axios";
 import { toast } from "sonner";
 import { isAxiosError } from "axios";
 
 export default function LoginView() {
+  const navigate = useNavigate();
   const initialValues: LoginForm = {
     email: "",
     password: "",
@@ -28,7 +29,30 @@ export default function LoginView() {
       success: (res) => {
         // res is the axios response object; return a string to show in the toast
         reset();
-        localStorage.setItem("cookMate_token", res.data);
+
+        const token =
+          res?.data?.token ?? (typeof res.data === "string" ? res.data : null);
+
+        if (token) {
+          setAuthToken(token);
+          try {
+            localStorage.setItem("cookMate_token", token);
+          } catch {
+            /* ignore localStorage errors in constrained environments */
+          }
+        } else {
+          setAuthToken(undefined);
+          try {
+            localStorage.removeItem("cookMate_token");
+          } catch {
+            /* ignore */
+          }
+        }
+
+        setTimeout(() => {
+          navigate("/home");
+        }, 2000);
+
         return "Logged in successfully!";
       },
       error: (err) => {

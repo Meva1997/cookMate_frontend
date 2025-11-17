@@ -5,6 +5,12 @@ export type User = {
   email: string;
 };
 
+export type UserLoggedIn = {
+  id: string;
+  handle: string;
+  email: string;
+};
+
 export type UserSocial = Pick<User, "handle" | "name" | "email" | "id"> & {
   _id: string;
   favorites: string[];
