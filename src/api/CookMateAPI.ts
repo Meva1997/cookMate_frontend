@@ -13,6 +13,18 @@ export async function getAllUsers() {
   }
 }
 
+export async function getUserProfileData() {
+  try {
+    const { data } = await api.get("/auth/me");
+    console.log("🚀 ~ getUserProfileData ~ data:", data);
+    return data.user;
+  } catch (err) {
+    if (isAxiosError(err) && err.response?.data?.error) {
+      return String(err.response.data.error);
+    }
+  }
+}
+
 export async function getUserById(userId: string) {
   try {
     const { data } = await api.get<UserSocial>(`/user/${userId}`);
