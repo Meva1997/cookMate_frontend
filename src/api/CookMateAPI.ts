@@ -103,3 +103,28 @@ export async function uploadRecipeImage(file: File) {
     }
   }
 }
+
+export async function updateRecipeById(
+  recipeId: string,
+  payload: Partial<RecipeArray>
+) {
+  try {
+    const { data } = await api.put(`/recipes/${recipeId}`, payload);
+    return data;
+  } catch (err) {
+    if (isAxiosError(err) && err.response?.data?.error) {
+      return String(err.response.data.error);
+    }
+  }
+}
+
+export async function deleteRecipeById(recipeId: string) {
+  try {
+    const { data } = await api.delete(`/recipes/${recipeId}`);
+    return data;
+  } catch (err) {
+    if (isAxiosError(err) && err.response?.data?.error) {
+      return String(err.response.data.error);
+    }
+  }
+}

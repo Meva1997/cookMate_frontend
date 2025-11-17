@@ -1,7 +1,7 @@
 import Spinner from "../../components/Spinner";
-import type { RecipeArray, UserSocial } from "../../types";
+import type { RecipeArray, UserLoggedIn, UserSocial } from "../../types";
 import { useQuery } from "@tanstack/react-query";
-import { getUserRecipes } from "../../api/CookMateAPI";
+import { getUserProfileData, getUserRecipes } from "../../api/CookMateAPI";
 import { Link } from "react-router-dom";
 
 type UserRecipesProps = {
@@ -15,6 +15,16 @@ export default function UserRecipes({ user }: UserRecipesProps) {
     retry: 1,
     refetchOnWindowFocus: false,
   });
+
+  //fetch current logged in user data
+  const { data: meData } = useQuery<UserLoggedIn>({
+    queryKey: ["userProfileInfo"],
+    queryFn: () => getUserProfileData(),
+    retry: 1,
+    refetchOnWindowFocus: false,
+  });
+
+  const currentUser = meData?.id === user.id;
 
   if (isLoading) {
     return (
@@ -71,12 +81,22 @@ export default function UserRecipes({ user }: UserRecipesProps) {
                     {recipe.likes.length} Likes
                   </p>
                 </div>
-                <Link
-                  to={`/user/${user.id}/recipe/${recipe._id}`}
-                  className="text-blue-500 hover:underline"
-                >
-                  View Recipe
-                </Link>
+                <div className="space-x-4">
+                  <Link
+                    to={`/user/${user.id}/recipe/${recipe._id}`}
+                    className="text-blue-500 hover:underline"
+                  >
+                    View Recipe
+                  </Link>
+                  {currentUser && (
+                    <Link
+                      to={`/user/${user.id}/recipe/${recipe._id}/edit`}
+                      className="text-blue-500 hover:underline"
+                    >
+                      Edit Recipe
+                    </Link>
+                  )}
+                </div>
               </div>
             </div>
           ))

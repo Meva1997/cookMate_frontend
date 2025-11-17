@@ -9,6 +9,7 @@ import UserEditProfile from "./views/profile/UserEditProfile";
 import HomeLayout from "./layouts/HomeLayout";
 import RecipeInfo from "./views/RecipeInfo";
 import HomeView from "./views/home/HomeView";
+import EditRecipeInfo from "./views/profile/EditRecipeInfo";
 
 export default function Router() {
   return (
@@ -28,6 +29,10 @@ export default function Router() {
           <Route
             path="/user/:userId/recipe/:recipeId"
             element={<RecipeInfo />}
+          />
+          <Route
+            path="/user/:userId/recipe/:recipeId/edit"
+            element={<EditRecipeInfo />}
           />
         </Route>
       </Routes>

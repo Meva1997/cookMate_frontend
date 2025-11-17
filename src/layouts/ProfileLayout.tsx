@@ -30,18 +30,6 @@ export default function ProfileLayout() {
               </Link>
             </nav>
           </div>
-
-          <div className="flex items-center gap-4">
-            <Link to="/admin">
-              <div
-                className="w-10 h-10 rounded-full bg-cover bg-center ring-2 ring-offset-2 ring-offset-[#fdfcfa] dark:ring-offset-[#1f1f1f] ring-[#d2b48c]/50"
-                style={{
-                  backgroundImage:
-                    "url('https://lh3.googleusercontent.com/aida-public/AB6AXuCvmjjKQ7Z1trUWJ4RVTwuzbD_rKDiHpDz3rI4Zi-sk78BIVD8GOqwgL_dMQYYw-EsmTaPa5Oe8pJuRv105uaTzgorBEyxyRuLKHYZyzjkKRFo3Sb45qTCQymYDT-gvIO5VqSL_dkLMv0BU1o3b5A3y6W2jTMMJdA7Evxx1l6VrKkK3F9EyuHPQA7fNwuzMEAWFlaGmDq0IEAbq_i1eRQUmYUWHh6P0quJtWz_NHV0TegkNjqgKHhTfb_1DlnE-qEqMv7baN-isLkM')",
-                }}
-              />
-            </Link>
-          </div>
         </header>
 
         <main className="flex-1 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

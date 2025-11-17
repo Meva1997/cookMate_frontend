@@ -6,7 +6,6 @@ import Spinner from "../components/Spinner";
 export default function RecipeInfo() {
   const { recipeId } = useParams<{ recipeId: string }>();
   const { userId } = useParams<{ userId: string }>();
-  console.log("🚀 ~ RecipeInfo ~ userId:", userId);
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["recipeInfo", recipeId],
@@ -14,6 +13,7 @@ export default function RecipeInfo() {
     retry: 1,
     refetchOnWindowFocus: false,
   });
+  console.log("🚀 ~ RecipeInfo ~ data:", data);
 
   if (isLoading) {
     return (
@@ -40,7 +40,7 @@ export default function RecipeInfo() {
       <main className="container mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
         <section className="flex space-x-2">
           <div className="mb-4 p-2 dark:bg-[#c9ad80] rounded-lg w-1/4 dark:text-black font-bold text-center dark:hover:bg-[#bfa46f] cursor-pointer transition-colors bg-[#19e6a2] text-white hover:bg-[#16a085]">
-            <Link to={`/admin/${userId}`}>Go to profile</Link>
+            <Link to={`/admin/${userId}`}>Go to author's profile</Link>
           </div>
           <div className="mb-4 p-2 dark:bg-[#c9ad80] rounded-lg w-1/4 dark:text-black font-bold text-center dark:hover:bg-[#bfa46f] cursor-pointer transition-colors bg-[#19e6a2] text-white hover:bg-[#16a085]">
             <Link to={"/home"}>Back to home</Link>
@@ -50,8 +50,9 @@ export default function RecipeInfo() {
           <div
             className="aspect-3/2 w-full bg-cover bg-center rounded-t-xl"
             style={{
-              backgroundImage:
-                "url('https://lh3.googleusercontent.com/aida-public/AB6AXuDFM4ybV1JfbXxpJt71faPU2-DOSvOTVQPGxPKUv5-n5YeRg4QZ-O1vKD4Jgfx3SjXnrn31RgI3XmdMYPjn2Cj4ywpLKs-x4RUiktdJaCzcGG_Gf7NSF-pmaxIEU5yb5DjgXkIPaXXoXQkmHoPrnDDa9ay8DnPnpNyOLXWBcnDibX8Y5kHb-PKFhLCmBUkd8J_iTO0RLa5Z_snHPIEzjmCQspL6np8IfB_-MKbLnv0f9WU1t8RNJd7keEs_U171_IYlD2D-ZVHI9d4')",
+              backgroundImage: data.image
+                ? `url('${data.image}')`
+                : "url('https://picsum.photos/seed/recipe/600')",
             }}
           />
 
@@ -61,12 +62,12 @@ export default function RecipeInfo() {
             </h1>
             <p className="mt-2 text-sm text-[#a1a1a1] dark:text-[#8a8a8a]">
               By{" "}
-              <a
+              <Link
                 className="font-medium text-[#a1a1a1] dark:text-[#d2b48c] hover:opacity-90"
-                href="#"
+                to={`/admin/${data.author}`}
               >
                 {data.author.toString()}
-              </a>
+              </Link>
               &nbsp;· In&nbsp;
               <a
                 className="font-medium text-[#a1a1a1] dark:text-[#d2b48c] hover:opacity-90"

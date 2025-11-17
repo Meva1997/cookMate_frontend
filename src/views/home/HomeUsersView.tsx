@@ -3,19 +3,6 @@ import { Link } from "react-router-dom";
 import type { UserSocial } from "../../types";
 
 export default function HomeUsersView({ data }: { data: UserSocial[] }) {
-  // if (!data || data.length === 0) {
-  //   return (
-  //     <div className="max-w-5xl mx-auto py-12 px-4 text-center">
-  //       <h2 className="text-2xl font-semibold text-[#0f172a] dark:text-[#e2e8f0]">
-  //         No users found
-  //       </h2>
-  //       <p className="mt-2 text-[#64748b] dark:text-[#94a3b8]">
-  //         There are no users to show yet.
-  //       </p>
-  //     </div>
-  //   );
-  // }
-
   const [searchTerm, setSearchTerm] = useState("");
 
   const filterUsers = (users: UserSocial[], term: string) => {

@@ -3,9 +3,10 @@ import { Link, useParams } from "react-router-dom";
 import UserRecipes from "./UserRecipes";
 import UserFavorites from "./UserFavorites";
 import { useQuery } from "@tanstack/react-query";
-import { getUserById } from "../../api/CookMateAPI";
+import { getUserById, getUserProfileData } from "../../api/CookMateAPI";
 import Spinner from "../../components/Spinner";
 import LogoutButton from "../../components/LogoutButton";
+import type { UserLoggedIn } from "../../types";
 
 export default function UserProfileView() {
   const [activeTab, setActiveTab] = useState<"recipes" | "favorites">(
@@ -20,6 +21,16 @@ export default function UserProfileView() {
     retry: 1,
     refetchOnWindowFocus: false,
   });
+
+  //fetch current logged in user data
+  const { data: meData } = useQuery<UserLoggedIn>({
+    queryKey: ["userProfileInfo"],
+    queryFn: () => getUserProfileData(),
+    retry: 1,
+    refetchOnWindowFocus: false,
+  });
+
+  const currentUser = meData?.id === userId;
 
   const user = typeof data === "string" ? undefined : data;
 
@@ -67,21 +78,25 @@ export default function UserProfileView() {
           </p>
         </section>
 
-        <nav className="flex gap-2">
-          <Link
-            to={`/admin/create-recipe/${userId}`}
-            className="px-5 py-2 rounded-lg bg-[#d2b48c]/20 dark:bg-[#d2b48c]/20 hover:bg-[#d2b48c]/30 dark:hover:bg-[#d2b48c]/30 text-[#d2b48c] font-bold text-sm transition-colors"
-          >
-            Create Recipe
-          </Link>
-          <Link
-            to={`/admin/${userId}/edit`}
-            className="px-5 py-2 rounded-lg bg-[#d2b48c]/20 dark:bg-[#d2b48c]/20 hover:bg-[#d2b48c]/30 dark:hover:bg-[#d2b48c]/30 text-[#d2b48c] font-bold text-sm transition-colors"
-          >
-            Edit profile
-          </Link>
-          <LogoutButton />
-        </nav>
+        {currentUser && (
+          <section>
+            <nav className="flex gap-2">
+              <Link
+                to={`/admin/create-recipe/${userId}`}
+                className="px-5 py-2 rounded-lg bg-[#d2b48c]/20 dark:bg-[#d2b48c]/20 hover:bg-[#d2b48c]/30 dark:hover:bg-[#d2b48c]/30 text-[#d2b48c] font-bold text-sm transition-colors"
+              >
+                Create Recipe
+              </Link>
+              <Link
+                to={`/admin/${userId}/edit`}
+                className="px-5 py-2 rounded-lg bg-[#d2b48c]/20 dark:bg-[#d2b48c]/20 hover:bg-[#d2b48c]/30 dark:hover:bg-[#d2b48c]/30 text-[#d2b48c] font-bold text-sm transition-colors"
+              >
+                Edit profile
+              </Link>
+              <LogoutButton />
+            </nav>
+          </section>
+        )}
 
         <section className="mt-12 w-full">
           <div className="border-b border-slate-200 dark:border-slate-800">

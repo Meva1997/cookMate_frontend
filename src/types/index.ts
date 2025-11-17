@@ -10,7 +10,6 @@ export type UserLoggedIn = {
   handle: string;
   email: string;
 };
-
 export type UserSocial = Pick<User, "handle" | "name" | "email" | "id"> & {
   _id: string;
   favorites: string[];

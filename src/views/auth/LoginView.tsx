@@ -1,12 +1,16 @@
-import { NavLink, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import ErrorMessage from "../../components/ErrorMessage";
 import type { LoginForm } from "../../types";
 import api, { setAuthToken } from "../../config/axios";
 import { toast } from "sonner";
 import { isAxiosError } from "axios";
+import { useState } from "react";
+import ShowPassword from "../../components/ShowPassword";
+import HidePassword from "../../components/HidePassword";
 
 export default function LoginView() {
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const initialValues: LoginForm = {
     email: "",
@@ -93,20 +97,30 @@ export default function LoginView() {
           <label className="sr-only" htmlFor="password">
             Password
           </label>
-          <input
-            id="password"
-            type="password"
-            autoComplete="current-password"
-            placeholder="Password"
-            className="form-input w-full rounded-lg border-none bg-white dark:bg-black/20 p-4 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background-light dark:focus:ring-offset-background-dark"
-            {...register("password", {
-              required: "Password is required",
-              minLength: {
-                value: 8,
-                message: "Password must be at least 8 characters",
-              },
-            })}
-          />
+          <div className="relative">
+            <input
+              id="password"
+              type={showPassword ? "text" : "password"}
+              autoComplete="current-password"
+              placeholder="Password"
+              className="form-input w-full rounded-lg border-none bg-white dark:bg-black/20 p-4 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background-light dark:focus:ring-offset-background-dark"
+              {...register("password", {
+                required: "Password is required",
+                minLength: {
+                  value: 8,
+                  message: "Password must be at least 8 characters",
+                },
+              })}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword((s) => !s)}
+              className="absolute inset-y-0 right-2 inline-flex items-center p-2 text-gray-600 dark:text-gray-300"
+              aria-label={showPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? <ShowPassword /> : <HidePassword />}
+            </button>
+          </div>
           {errors.password && (
             <ErrorMessage>{errors.password.message}</ErrorMessage>
           )}
@@ -124,12 +138,21 @@ export default function LoginView() {
 
       <p className="mt-8 text-center text-sm text-gray-600 dark:text-gray-400">
         Don't have an account?{" "}
-        <NavLink
+        <Link
           className="font-medium text-primary hover:underline hover:text-amber-800 hover:font-bold"
           to="/auth/register"
         >
           Create account
-        </NavLink>
+        </Link>
+      </p>
+      <p className="mt-8 text-center text-sm text-gray-600 dark:text-gray-400">
+        Don't want to Register?{" "}
+        <Link
+          className="font-medium text-primary hover:underline hover:text-amber-800 hover:font-bold"
+          to="/home"
+        >
+          Continue as Guest
+        </Link>
       </p>
     </>
   );

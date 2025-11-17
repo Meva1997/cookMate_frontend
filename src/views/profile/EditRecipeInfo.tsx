@@ -1,17 +1,32 @@
-import { Link, useParams } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { isAxiosError } from "axios";
-import api from "../../config/axios";
-import type { CreateRecipeForm } from "../../types";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import ErrorMessage from "../../components/ErrorMessage";
 import { categories } from "../../db";
-import { useMutation } from "@tanstack/react-query";
-import { uploadRecipeImage } from "../../api/CookMateAPI";
-import { useEffect, useState } from "react";
+import type { CreateRecipeForm, RecipeArray } from "../../types";
+import {
+  getRecipeById,
+  uploadRecipeImage,
+  updateRecipeById,
+} from "../../api/CookMateAPI";
+import DeleteRecipeButton from "../../components/DeleteRecipeButton";
 
-export default function CreateRecipe() {
-  const { userId } = useParams<{ userId: string }>();
+export default function EditRecipeInfo() {
+  const { recipeId } = useParams<{ recipeId: string }>();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["recipeInfo", recipeId],
+    queryFn: () => getRecipeById(recipeId!),
+    enabled: !!recipeId, // only run if recipeId is defined
+    retry: 1,
+    refetchOnWindowFocus: false,
+  });
+
   const initialValues: CreateRecipeForm = {
     title: "",
     description: "",
@@ -19,8 +34,9 @@ export default function CreateRecipe() {
     instructions: "",
     category: "",
     image: "",
-    author: userId!,
+    author: "",
   };
+
   const {
     register,
     handleSubmit,
@@ -31,89 +47,143 @@ export default function CreateRecipe() {
   } = useForm({ defaultValues: initialValues });
 
   const [imagePreview, setImagePreview] = useState<string>("");
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const handleCreateRecipe = (formData: CreateRecipeForm) => {
-    const img = formData.image ?? watch("image");
-    if (!img) {
-      setImagePreview("");
-      toast.error("Please upload an image for the recipe.");
-      return;
-    }
+  // when recipe data arrives, populate the form
+  useEffect(() => {
+    if (!data) return;
 
-    const recipeData = {
-      ...formData,
-      author: userId ?? formData.author,
+    const recipe = data as RecipeArray;
+    reset({
+      title: recipe.title ?? "",
+      description: recipe.description ?? "",
+      ingredients: Array.isArray(recipe.ingredients)
+        ? recipe.ingredients.join("\n")
+        : "",
+      instructions: Array.isArray(recipe.instructions)
+        ? recipe.instructions.join("\n")
+        : "",
+      category: recipe.category ?? "",
+      image: recipe.image ?? "",
+      author: String(recipe.author ?? ""),
+    });
+
+    if (recipe.image) setImagePreview(recipe.image);
+  }, [data, reset]);
+
+  const uploadImageMutation = useMutation({
+    mutationFn: (file: File) => uploadRecipeImage(file),
+    onError: (error: unknown) => {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Image upload failed. Please try again.";
+      toast.error(message);
+    },
+    onSuccess: (res: unknown) => {
+      // uploadRecipeImage returns an object with imageUrl
+      if (res && typeof res === "object" && "imageUrl" in res) {
+        const imageUrl = (res as { imageUrl: string }).imageUrl;
+        setValue("image", imageUrl);
+        setImagePreview(imageUrl);
+        toast.success("Image uploaded successfully!");
+      }
+    },
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: (payload: Partial<RecipeArray>) =>
+      updateRecipeById(recipeId!, payload),
+    onError: (err: unknown) => {
+      if (isAxiosError(err) && err.response?.data?.error) {
+        toast.error(String(err.response.data.error));
+      } else if (err instanceof Error) {
+        toast.error(err.message);
+      } else {
+        toast.error("Failed to update recipe. Please try again.");
+      }
+    },
+    onSuccess: (updated: unknown) => {
+      toast.success("Recipe updated successfully!");
+      // update query cache so UI reflects changes
+      queryClient.setQueryData(["recipeInfo", recipeId], updated);
+      queryClient.invalidateQueries({ queryKey: ["getAllRecipes"] });
+      // navigate back to profile or recipe page
+      const authorId =
+        updated && typeof updated === "object" && "author" in updated
+          ? (updated as { author: string }).author
+          : watch("author");
+      navigate(`/admin/${authorId}`);
+    },
+  });
+
+  // removed separate handleChange; we use the hidden file input's onChange below
+
+  const onSubmit = async (formData: CreateRecipeForm) => {
+    const payload = {
+      title: formData.title,
+      description: formData.description,
+      category: formData.category,
+      image: formData.image || imagePreview,
       ingredients: formData.ingredients
         .split("\n")
-        .map((ing) => ing.trim())
-        .filter((ing) => ing.length > 0), // process ingredients
+        .map((s) => s.trim())
+        .filter(Boolean),
       instructions: formData.instructions
         .split("\n")
-        .map((step) => step.trim())
-        .filter((step) => step.length > 0), // process instructions
+        .map((s) => s.trim())
+        .filter(Boolean),
+      author: formData.author,
     };
 
-    const createRecipePromise = api.post("/recipes", recipeData);
-
-    const res = toast.promise(createRecipePromise, {
-      loading: "Creating your recipe...",
-      success: (res) => {
-        // res is the axios response object; return a string to show in the toast
-        reset();
-        setImagePreview("");
-        setTimeout(() => {
-          window.location.assign(`/admin/${userId}`);
-        }, 2000);
-        return String(res.data);
-      },
-      error: (err) => {
-        // optional: return server error message if available
-        if (isAxiosError(err) && err.response?.data?.error) {
-          return String(err.response.data.error);
-        }
-        return "Failed to create recipe. Please try again.";
-      },
+    const prom = updateMutation.mutateAsync(payload);
+    return toast.promise(prom, {
+      loading: "Updating recipe...",
+      success: "Recipe updated",
+      error: "Failed to update recipe",
     });
-    return res;
   };
 
   const watchedImage = watch("image");
-
   useEffect(() => {
     if (watchedImage) setImagePreview(watchedImage);
   }, [watchedImage]);
 
-  const uploadImageMutation = useMutation({
-    mutationFn: (file: File) => uploadRecipeImage(file),
-    onError: (error) => {
-      toast.error(error?.message || "Image upload failed. Please try again.");
-    },
-    onSuccess: (data) => {
-      setValue("image", data.imageUrl);
-      setImagePreview(data.imageUrl);
-      toast.success("Image uploaded successfully!");
-    },
-  });
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-64">Loading...</div>
+    );
+  }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      uploadImageMutation.mutate(e.target.files[0]);
-    }
-  };
+  if (isError) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <p className="text-red-500">Error loading recipe.</p>
+      </div>
+    );
+  }
 
   return (
     <main className="flex grow container max-w-5xl mx-auto py-8 md:py-12">
       <div className="mx-auto w-3/4 p-6 sm:p-8 rounded-xl shadow-lg  bg-[#ffffff] dark:bg-[#1f1f1f]">
-        <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold text-[#0f172a] dark:text-[#e2e8f0]">
-            Create Recipe
-          </h1>
-          <p className="mt-2 text-[#64748b] dark:text-[#94a3b8]">
-            Share your culinary masterpiece with the world.
-          </p>
+        <div className="mb-8 flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl md:text-4xl font-bold text-[#0f172a] dark:text-[#e2e8f0]">
+              Edit Recipe
+            </h1>
+            <p className="mt-2 text-[#64748b] dark:text-[#94a3b8]">
+              Update your recipe details.
+            </p>
+          </div>
+          <div className="bg-red-500 p-2 rounded-lg  hover:bg-red-700 transition-colors cursor-pointer">
+            <DeleteRecipeButton
+              recipeId={recipeId!}
+              authorId={watch("author")}
+            />
+          </div>
         </div>
 
-        <form className="space-y-6" onSubmit={handleSubmit(handleCreateRecipe)}>
+        <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
           <div>
             <label
               className="block text-sm font-medium text-[#0f172a] dark:text-[#e2e8f0] mb-2"
@@ -164,7 +234,7 @@ export default function CreateRecipe() {
             <textarea
               id="ingredients"
               rows={5}
-              placeholder={`List each ingredient on a new line.\ne.g., 200g Pasta\n1 can Chopped Tomatoes\n2 cloves Garlic`}
+              placeholder={`List each ingredient on a new line.`}
               className="w-full rounded-lg px-4 py-3 bg-[#f6f8f7] dark:bg-[#1f1f1f] border border-[#e2e8f0] dark:border-[#3a3a3a] text-[#0f172a] dark:text-[#e2e8f0] placeholder-[#64748b] dark:placeholder-[#94a3b8] focus:outline-none focus:ring-[#d2b48c]/50 focus:border-[#d2b48c] transition-all"
               {...register("ingredients", {
                 required: "Ingredients are required",
@@ -212,9 +282,7 @@ export default function CreateRecipe() {
                 backgroundPosition: "right 0.75rem center",
                 backgroundSize: "1.5em 1.5em",
               }}
-              {...register("category", {
-                required: "Category is required",
-              })}
+              {...register("category", { required: "Category is required" })}
             >
               {categories.map((category) => (
                 <option key={category} value={category}>
@@ -234,12 +302,32 @@ export default function CreateRecipe() {
             <div className="mt-2 flex justify-center rounded-lg border-2 border-dashed border-[#e2e8f0] dark:border-[#3a3a3a] px-6 py-10 transition-colors">
               <div className="text-center">
                 {imagePreview.length ? (
-                  <div className="mt-10">
+                  <div className="mt-4 flex flex-col items-center">
                     <img
                       src={imagePreview}
                       alt="Recipe Preview"
                       className="max-h-40 rounded-md"
                     />
+                    <div className="mt-3 flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => fileInputRef.current?.click()}
+                        className="px-3 py-1 text-sm rounded-md bg-[#19e6a2] text-white dark:text-black dark:bg-[#d2b48c] border hover:opacity-50 cursor-pointer"
+                      >
+                        Change image
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          // remove image preview and form value if user wants to remove it
+                          setImagePreview("");
+                          setValue("image", "");
+                        }}
+                        className="px-3 py-1 text-sm rounded-md bg-red-500 text-white hover:bg-red-700 cursor-pointer"
+                      >
+                        Remove
+                      </button>
+                    </div>
                   </div>
                 ) : (
                   <>
@@ -264,41 +352,43 @@ export default function CreateRecipe() {
                         htmlFor="image"
                       >
                         <span>Upload a image</span>
-                        <input
-                          className="sr-only"
-                          id="image"
-                          type="file"
-                          accept="image/*" // only accept images
-                          {...register("image", {
-                            onChange: handleChange,
-                            required: "Image is required",
-                          })}
-                        />
                         <p className="pl-1">or drag and drop</p>
                         <p className="text-xs text-[#64748b] dark:text-[#94a3b8]">
                           PNG, JPG, GIF up to 10MB
                         </p>
                       </label>
                     </div>
-                    {errors.image && (
-                      <ErrorMessage>{errors.image.message}</ErrorMessage>
-                    )}
                   </>
                 )}
               </div>
+              {/* hidden file input used for both upload and change */}
+              <input
+                ref={fileInputRef}
+                className="sr-only"
+                id="image"
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    // clear input after upload completes so same file can be selected again
+                    uploadImageMutation.mutate(file, {
+                      onSettled: () => {
+                        if (fileInputRef.current)
+                          fileInputRef.current.value = "";
+                      },
+                    });
+                  }
+                }}
+              />
             </div>
           </div>
 
-          <input
-            type="hidden"
-            id="author"
-            value={userId ?? ""}
-            {...register("author")}
-          />
+          <input type="hidden" id="author" {...register("author")} />
 
           <div className="pt-4 flex space-x-2 justify-end">
             <Link
-              to={`/admin/${userId}`}
+              to={`/admin/${watch("author")}`}
               className="w-full sm:w-auto px-8 py-3 font-bold rounded-lg focus:outline-none transition-all shadow-sm hover:shadow-md bg-[#f8f5f2] hover:bg-gray-400 dark:bg-[#2a2a2a] dark:hover:bg-[#a4885a] text-[#1f1f1f] dark:text-[#e2e8f0] border border-[#e2e8f0] dark:border-[#3a3a3a]"
             >
               Back to Profile
@@ -308,7 +398,7 @@ export default function CreateRecipe() {
               disabled={isSubmitting}
               className="w-full sm:w-auto px-8 py-3 font-bold rounded-lg focus:outline-none transition-all shadow-sm hover:shadow-md hover:bg-[#1aa174] bg-[#19e6a2] dark:hover:bg-[#a4885a] dark:bg-[#c9ad80] text-[#1f1f1f] cursor-pointer"
             >
-              {isSubmitting ? "Submitting..." : "Create Recipe"}
+              {isSubmitting ? "Updating..." : "Update Recipe"}
             </button>
           </div>
         </form>
