@@ -10,7 +10,13 @@ export default function HomeRecipesView() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const { data, isLoading, isError } = useQuery<RecipeArray[]>({
     queryKey: ["getAllRecipes"],
-    queryFn: getAllRecipes,
+    queryFn: async (): Promise<RecipeArray[]> => {
+      const res = await getAllRecipes();
+      if (!res || typeof res === "string") {
+        throw new Error("Failed to fetch recipes");
+      }
+      return res;
+    },
     retry: 1,
     refetchOnWindowFocus: false,
   });

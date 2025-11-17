@@ -66,6 +66,9 @@ export default function UserEditProfile() {
     onSuccess: (data) => {
       toast.success(data);
       queryClient.invalidateQueries({ queryKey: ["userProfile", userId] });
+      setTimeout(() => {
+        window.location.assign(`/admin/${userId}`);
+      }, 1500);
     },
   });
 
@@ -77,11 +80,6 @@ export default function UserEditProfile() {
     return (
       <>
         <Spinner />
-        <div className="flex justify-center items-center h-30">
-          <p className="animate-pulse dark:text-[#c9ad80] text-[#19e6a2] text-2xl">
-            Loading...
-          </p>
-        </div>
       </>
     );
   }
