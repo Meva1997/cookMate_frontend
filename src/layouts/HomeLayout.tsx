@@ -18,9 +18,9 @@ export default function HomeLayout() {
         <header className="sticky top-0 z-50 backdrop-blur-sm bg-white dark:bg-black">
           <nav className="container mx-auto px-6 py-4 flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <Logo className="h-8 w-8 text-green-950/80 dark:text-[#c9ad80]" />
+              <Logo className="h-8 w-8 text-green-950/80 dark:text-white" />
               <Link to="/home">
-                <h1 className="text-2xl font-bold text-black dark:text-white">
+                <h1 className="text-2xl font-bold text-black dark:text-green-900">
                   CookMate
                 </h1>
               </Link>
@@ -31,7 +31,7 @@ export default function HomeLayout() {
                 <>
                   <Link
                     to={`/admin/${data.id}`}
-                    className="font-medium hover:underline"
+                    className="font-black hover:underline text-xl dark:text-green-900"
                   >
                     {data.handle}
                   </Link>
