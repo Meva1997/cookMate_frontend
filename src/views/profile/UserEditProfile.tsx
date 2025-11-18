@@ -1,9 +1,13 @@
 import { Link, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { useQueryClient, useMutation } from "@tanstack/react-query";
+import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import type { User } from "../../types";
-import { getUserById, updateUserProfileById } from "../../api/CookMateAPI";
+import {
+  getUserById,
+  getUserProfileData,
+  updateUserProfileById,
+} from "../../api/CookMateAPI";
 import { toast } from "sonner";
 import ErrorMessage from "../../components/ErrorMessage";
 import Spinner from "../../components/Spinner";
@@ -75,6 +79,30 @@ export default function UserEditProfile() {
   const handleUpdateProfile = (formData: User) => {
     updateUserMutation.mutate(formData);
   };
+
+  const { data: meData } = useQuery({
+    queryKey: ["userProfileInfo"],
+    queryFn: () => getUserProfileData(),
+    retry: 1,
+    refetchOnWindowFocus: false,
+  });
+
+  const currentUser = meData?.id !== userId;
+
+  if (currentUser && !meData?.id) {
+    return (
+      <main className="flex grow container max-w-5xl mx-auto py-8 md:py-12">
+        <div className="mx-auto w-3/4 p-6 flex justify-center items-center">
+          <div className="text-red-500 text-center">
+            <p>You are not authorized to edit this profile.</p>
+            <Link to="/home" className="text-blue-500 hover:underline">
+              Go back to home
+            </Link>
+          </div>
+        </div>
+      </main>
+    );
+  }
 
   if (isLoading) {
     return (

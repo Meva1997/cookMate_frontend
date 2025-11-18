@@ -1,12 +1,15 @@
-import { QueryClient, useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import { deleteRecipeById } from "../api/CookMateAPI";
 import { isAxiosError } from "axios";
 import { toast } from "sonner";
 import { useState } from "react";
+import DeletionConfirm from "./DeletionConfirm";
 
 type DeleteRecipeButtonProps = {
   recipeId: string;
-  authorId: string;
+  // authorId may be a string id or an object returned from the API (e.g. { _id, name })
+  authorId: string | { _id?: string; id?: string; name?: string };
 };
 
 export default function DeleteRecipeButton({
@@ -14,7 +17,13 @@ export default function DeleteRecipeButton({
   authorId,
 }: DeleteRecipeButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const queryClient = new QueryClient();
+  const [showConfirm, setShowConfirm] = useState(false);
+  const queryClient = useQueryClient();
+  const resolvedAuthorId =
+    typeof authorId === "string"
+      ? authorId
+      : String(authorId?._id ?? authorId?.id ?? "");
+  const navigate = useNavigate();
   const deleteMutation = useMutation({
     mutationFn: () => deleteRecipeById(recipeId),
     onMutate: () => {
@@ -33,7 +42,12 @@ export default function DeleteRecipeButton({
     onSuccess: () => {
       toast.success("Recipe deleted successfully!");
       queryClient.invalidateQueries({ queryKey: ["getAllRecipes"] });
-      window.location.assign(`/admin/${authorId}`);
+      // navigate SPA to the author's profile — resolvedAuthorId may be empty, fallback to /home
+      if (resolvedAuthorId) {
+        navigate(`/admin/${resolvedAuthorId}`);
+      } else {
+        navigate(`/home`);
+      }
       setIsLoading(false);
     },
   });
@@ -42,14 +56,24 @@ export default function DeleteRecipeButton({
       {isLoading ? (
         <p className="animate-pulse">Deleting...</p>
       ) : (
-        <button
-          className="cursor-pointer"
-          onClick={() => {
-            deleteMutation.mutate();
-          }}
-        >
-          Delete Recipe
-        </button>
+        <>
+          <button
+            className="cursor-pointer"
+            onClick={() => setShowConfirm(true)}
+          >
+            Delete Recipe
+          </button>
+
+          <DeletionConfirm
+            open={showConfirm}
+            onClose={() => setShowConfirm(false)}
+            onConfirm={() => {
+              setShowConfirm(false);
+              deleteMutation.mutate();
+            }}
+            isLoading={isLoading}
+          />
+        </>
       )}
     </>
   );

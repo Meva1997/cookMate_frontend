@@ -43,7 +43,10 @@ export type RecipeArray = {
   instructions: string[];
   category: string;
   image: string;
-  author: string;
+  author: {
+    _id: string;
+    name: string;
+  };
   likes: string[];
   favorites: string[];
 };

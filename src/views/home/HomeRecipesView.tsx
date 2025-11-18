@@ -73,13 +73,13 @@ export default function HomeRecipesView() {
                 />
               </div>
               <h3 className="text-lg font-bold">{c.title}</h3>
-              <p className="text-sm dark:text-white">By: {c.author}</p>
+              <p className="text-sm dark:text-white">By: {c.author.name}</p>
               <div className="flex items-center text-sm dark:text-white mt-2 space-x-2">
                 <span>{c.likes.length} ❤️</span>
                 <span>{c.favorites.length} ⭐</span>
               </div>
               <div className="bg-[#19e6a2] hover:bg-[#16b887] text-white  dark:bg-[#c9ad80] dark:hover:bg-[#a4885a] w-1/2 mt-2 text-sm rounded-lg text-center dark:text-black font-medium">
-                <Link to={`/user/${c.author}/recipe/${c._id}`}>
+                <Link to={`/user/${c.author._id}/recipe/${c._id}`}>
                   View Recipe
                 </Link>
               </div>
