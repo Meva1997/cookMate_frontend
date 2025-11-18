@@ -52,7 +52,7 @@ export default function HomeRecipesView() {
               type="button"
               className={`px-4 py-2 rounded-lg text-md font-medium mr-2 mb-2 transition-colors ${
                 selectedCategory === category
-                  ? "bg-[#19e6a2] text-white dark:bg-[#c9ad80] dark:text-black"
+                  ? "bg-green-950/80 text-white dark:bg-[#c9ad80] dark:text-black"
                   : "bg-gray-200 text-gray-800 dark:bg-[#334155] dark:text-[#94a3b8] hover:bg-gray-300 dark:hover:bg-[#475569] cursor-pointer"
               }`}
             >
@@ -78,7 +78,7 @@ export default function HomeRecipesView() {
                 <span>{c.likes.length} ❤️</span>
                 <span>{c.favorites.length} ⭐</span>
               </div>
-              <div className="bg-[#19e6a2] hover:bg-[#16b887] text-white  dark:bg-[#c9ad80] dark:hover:bg-[#a4885a] w-1/2 mt-2 text-sm rounded-lg text-center dark:text-black font-medium">
+              <div className="bg-green-950/80 hover:bg-green-950 text-white  dark:bg-[#c9ad80] dark:hover:bg-[#a4885a] w-1/2 mt-2 text-sm rounded-lg text-center dark:text-black font-medium">
                 <Link to={`/user/${c.author._id}/recipe/${c._id}`}>
                   View Recipe
                 </Link>

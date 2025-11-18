@@ -85,13 +85,13 @@ export default function UserProfileView() {
             <nav className="flex gap-2">
               <Link
                 to={`/admin/create-recipe/${userId}`}
-                className="px-5 py-2 rounded-lg bg-[#d2b48c]/20 dark:bg-[#d2b48c]/20 hover:bg-[#d2b48c]/30 dark:hover:bg-[#d2b48c]/30 text-[#d2b48c] font-bold text-sm transition-colors"
+                className="px-5 py-2 rounded-lg dark:bg-[#d2b48c]/20 dark:hover:bg-[#d2b48c]/30 dark:text-[#d2b48c] font-bold text-sm bg-green-950/80 text-white transition-colors hover:bg-green-950"
               >
                 Create Recipe
               </Link>
               <Link
                 to={`/admin/${userId}/edit`}
-                className="px-5 py-2 rounded-lg bg-[#d2b48c]/20 dark:bg-[#d2b48c]/20 hover:bg-[#d2b48c]/30 dark:hover:bg-[#d2b48c]/30 text-[#d2b48c] font-bold text-sm transition-colors"
+                className="px-5 py-2 rounded-lg dark:bg-[#d2b48c]/20 dark:hover:bg-[#d2b48c]/30 dark:text-[#d2b48c] font-bold text-sm bg-green-950/80 text-white transition-colors hover:bg-green-950"
               >
                 Edit profile
               </Link>

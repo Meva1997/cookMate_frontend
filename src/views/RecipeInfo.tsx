@@ -39,10 +39,10 @@ export default function RecipeInfo() {
     return (
       <main className="container mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
         <section className="flex space-x-2">
-          <div className="mb-4 p-2 dark:bg-[#c9ad80] rounded-lg w-1/4 dark:text-black font-bold text-center dark:hover:bg-[#bfa46f] cursor-pointer transition-colors bg-[#19e6a2] text-white hover:bg-[#16a085]">
+          <div className="mb-4 p-2 dark:bg-[#c9ad80] rounded-lg w-1/4 dark:text-black font-bold text-center dark:hover:bg-[#bfa46f] cursor-pointer transition-colors bg-green-950/80 text-white hover:bg-green-950">
             <Link to={`/admin/${userId}`}>Go to author's profile</Link>
           </div>
-          <div className="mb-4 p-2 dark:bg-[#c9ad80] rounded-lg w-1/4 dark:text-black font-bold text-center dark:hover:bg-[#bfa46f] cursor-pointer transition-colors bg-[#19e6a2] text-white hover:bg-[#16a085]">
+          <div className="mb-4 p-2 dark:bg-[#c9ad80] rounded-lg w-1/4 dark:text-black font-bold text-center dark:hover:bg-[#bfa46f] cursor-pointer transition-colors bg-green-950/80 text-white hover:bg-green-950">
             <Link to={"/home"}>Back to home</Link>
           </div>
         </section>
@@ -121,7 +121,7 @@ export default function RecipeInfo() {
                 <ul className="mt-4 space-y-3">
                   {data.ingredients.map((ing) => (
                     <li key={ing} className="flex items-center gap-3">
-                      <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#19e6a2] dark:bg-[#c9ad80]">
+                      <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-green-950/80 text-white dark:bg-[#c9ad80]">
                         <svg
                           fill="currentColor"
                           height="20"
@@ -147,7 +147,7 @@ export default function RecipeInfo() {
                 <ol className="mt-4 space-y-4">
                   {data.instructions.map((step, i) => (
                     <li key={i} className="flex gap-4">
-                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#19e6a2] dark:bg-[#c9ad80] font-semibold">
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-green-950/80 text-white dark:bg-[#c9ad80] font-semibold">
                         {i + 1}
                       </div>
                       <p className="text-sm text-[#1f1f1f] dark:text-[#f0eade]">
@@ -179,10 +179,10 @@ export default function RecipeInfo() {
                     <div className="flex-1">
                       <form className="relative">
                         <input
-                          className="w-full rounded-lg p-4 pr-28 text-sm border-2 border-[#19e6a2] dark:border-[#c9ad80] focus:outline-none focus:ring-2 focus:ring-[#19e6a2] dark:focus:ring-[#c9ad80]"
+                          className="w-full rounded-lg p-4 pr-28 text-sm border-2 border-green-950/80 dark:border-[#c9ad80] focus:outline-none focus:ring-2 focus:ring-green-950/50 dark:focus:ring-[#c9ad80]"
                           placeholder="Add a comment..."
                         />
-                        <button className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md px-4 py-2 font-semibold bg-[#19e6a2] dark:bg-[#c9ad80] text-[#0f172a] ">
+                        <button className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md px-4 py-2 font-semibold bg-green-950/80 dark:bg-[#c9ad80] text-white ">
                           Post
                         </button>
                       </form>

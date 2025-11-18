@@ -32,7 +32,7 @@ export default function HomeUsersView({ data }: { data: UserSocial[] }) {
         <input
           type="text"
           placeholder="Search users..."
-          className="w-full p-2 border border-gray-300 rounded-md mb-6 focus:outline-none focus:ring-2 focus:ring-[#19e6a2]/50 focus:border-[#19e6a2] dark:bg-[#2a2a2a] dark:border-[#334155] dark:focus:border-[#c9ad80] dark:focus:ring-0 dark:text-[#e2e8f0] dark:placeholder-[#94a3b8]"
+          className="w-full p-2 border border-gray-300 rounded-md mb-6 focus:outline-none focus:ring-2 focus:ring-green-950/50 focus:border-green-950/80 dark:bg-[#2a2a2a] dark:border-[#334155] dark:focus:border-[#c9ad80] dark:focus:ring-0 dark:text-[#e2e8f0] dark:placeholder-[#94a3b8]"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
@@ -46,7 +46,7 @@ export default function HomeUsersView({ data }: { data: UserSocial[] }) {
           >
             <div className="flex items-start gap-4">
               <div className="flex-none">
-                <div className="h-14 w-14 rounded-full bg-[#f6f8f7] dark:bg-[#11211c] flex items-center justify-center text-xl font-bold text-[#0f172a] dark:text-[#e2e8f0]">
+                <div className="h-14 w-14 rounded-full bg-green-950/80 dark:bg-[#11211c] flex items-center justify-center text-xl font-bold text-white dark:text-[#e2e8f0]">
                   {user.name
                     ? user.name.charAt(0).toUpperCase()
                     : user.handle?.charAt(0).toUpperCase()}
@@ -68,7 +68,7 @@ export default function HomeUsersView({ data }: { data: UserSocial[] }) {
               <div className="flex-none text-right">
                 <Link
                   to={`/admin/${user._id}`}
-                  className="inline-block px-3 py-1 rounded-md bg-[#19e6a2] dark:bg-[#c9ad80] dark:text-black text-white font-medium hover:opacity-90"
+                  className="inline-block px-3 py-1 rounded-md bg-green-950/80 dark:bg-[#c9ad80] dark:text-black text-white font-medium hover:opacity-90"
                 >
                   View
                 </Link>

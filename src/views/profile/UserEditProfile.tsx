@@ -151,7 +151,7 @@ export default function UserEditProfile() {
               id="handle"
               type="text"
               placeholder="e.g., cookLover"
-              className="w-full rounded-lg px-4 py-3 bg-[#f6f8f7] dark:bg-[#2a2a2a] border border-[#e2e8f0] dark:border-[#334155] text-[#0f172a] dark:text-[#e2e8f0] placeholder-[#64748b] dark:placeholder-[#94a3b8] focus:outline-none focus:ring-[#19e6a2]/50 focus:border-[#19e6a2] dark:focus:ring-[#a4885a]/50 dark:focus:border-[#a4885a] transition-all"
+              className="w-full rounded-lg px-4 py-3 bg-[#f6f8f7] dark:bg-[#2a2a2a] border border-[#e2e8f0] dark:border-[#334155] text-[#0f172a] dark:text-[#e2e8f0] placeholder-[#64748b] dark:placeholder-[#94a3b8] focus:outline-none focus:ring-green-950/50 focus:border-green-950/80 dark:focus:ring-[#a4885a]/50 dark:focus:border-[#a4885a] transition-all"
               {...register("handle", {
                 required: "Handle is required",
               })}
@@ -172,7 +172,7 @@ export default function UserEditProfile() {
               id="name"
               type="text"
               placeholder="e.g., Sofia Rodriguez"
-              className="w-full rounded-lg px-4 py-3 bg-[#f6f8f7] dark:bg-[#2a2a2a] border border-[#e2e8f0] dark:border-[#334155] text-[#0f172a] dark:text-[#e2e8f0] placeholder-[#64748b] dark:placeholder-[#94a3b8] focus:outline-none focus:ring-[#19e6a2]/50 focus:border-[#19e6a2] dark:focus:ring-[#a4885a]/50 dark:focus:border-[#a4885a] transition-all"
+              className="w-full rounded-lg px-4 py-3 bg-[#f6f8f7] dark:bg-[#2a2a2a] border border-[#e2e8f0] dark:border-[#334155] text-[#0f172a] dark:text-[#e2e8f0] placeholder-[#64748b] dark:placeholder-[#94a3b8] focus:outline-none focus:ring-green-950/50 focus:border-green-950/80 dark:focus:ring-[#a4885a]/50 dark:focus:border-[#a4885a] transition-all"
               {...register("name", {
                 required: "Name is required",
               })}
@@ -191,7 +191,7 @@ export default function UserEditProfile() {
               id="email"
               type="email"
               placeholder="you@example.com"
-              className="w-full rounded-lg px-4 py-3 bg-[#f6f8f7] dark:bg-[#2a2a2a] border border-[#e2e8f0] dark:border-[#334155] text-[#0f172a] dark:text-[#e2e8f0] placeholder-[#64748b] dark:placeholder-[#94a3b8] focus:outline-none focus:ring-[#19e6a2]/50 focus:border-[#19e6a2] dark:focus:ring-[#a4885a]/50 dark:focus:border-[#a4885a] transition-all"
+              className="w-full rounded-lg px-4 py-3 bg-[#f6f8f7] dark:bg-[#2a2a2a] border border-[#e2e8f0] dark:border-[#334155] text-[#0f172a] dark:text-[#e2e8f0] placeholder-[#64748b] dark:placeholder-[#94a3b8] focus:outline-none focus:ring-green-950/50 focus:border-green-950/80 dark:focus:ring-[#a4885a]/50 dark:focus:border-[#a4885a] transition-all"
               {...register("email", {
                 required: "Email is required",
                 pattern: {
@@ -215,7 +215,7 @@ export default function UserEditProfile() {
             <textarea
               id="description"
               placeholder="I'm a passionate home cook who loves to experiment with new recipes and flavors."
-              className="w-full rounded-lg px-4 py-3 bg-[#f6f8f7] dark:bg-[#2a2a2a] border border-[#e2e8f0] dark:border-[#334155] text-[#0f172a] dark:text-[#e2e8f0] placeholder-[#64748b] dark:placeholder-[#94a3b8] focus:outline-none focus:ring-[#19e6a2]/50 focus:border-[#19e6a2] dark:focus:ring-[#a4885a]/50 dark:focus:border-[#a4885a] transition-all"
+              className="w-full rounded-lg px-4 py-3 bg-[#f6f8f7] dark:bg-[#2a2a2a] border border-[#e2e8f0] dark:border-[#334155] text-[#0f172a] dark:text-[#e2e8f0] placeholder-[#64748b] dark:placeholder-[#94a3b8] focus:outline-none focus:ring-green-950/50 focus:border-green-950/80 dark:focus:ring-[#a4885a]/50 dark:focus:border-[#a4885a] transition-all"
               {...register("description")}
             />
             {errors.description && (
@@ -233,7 +233,7 @@ export default function UserEditProfile() {
 
             <button
               type="submit"
-              className="w-full sm:w-auto px-8 py-3 font-bold rounded-lg focus:outline-none transition-all shadow-sm hover:shadow-md hover:bg-[#1aa174] bg-[#19e6a2] dark:hover:bg-[#a4885a] dark:bg-[#c9ad80] text-[#1f1f1f] cursor-pointer"
+              className="w-full sm:w-auto px-8 py-3 font-bold rounded-lg focus:outline-none transition-all shadow-sm hover:shadow-md hover:bg-green-950 bg-green-950/80 dark:hover:bg-[#a4885a] dark:bg-[#c9ad80] text-white cursor-pointer"
             >
               Save changes
             </button>

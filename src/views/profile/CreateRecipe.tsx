@@ -306,7 +306,7 @@ export default function CreateRecipe() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full sm:w-auto px-8 py-3 font-bold rounded-lg focus:outline-none transition-all shadow-sm hover:shadow-md hover:bg-[#1aa174] bg-[#19e6a2] dark:hover:bg-[#a4885a] dark:bg-[#c9ad80] text-[#1f1f1f] cursor-pointer"
+              className="w-full sm:w-auto px-8 py-3 font-bold rounded-lg focus:outline-none transition-all shadow-sm hover:shadow-md hover:bg-green-950 bg-green-950/80 dark:hover:bg-[#a4885a] dark:bg-[#c9ad80] text-white cursor-pointer"
             >
               {isSubmitting ? "Submitting..." : "Create Recipe"}
             </button>

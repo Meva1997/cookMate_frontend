@@ -34,7 +34,7 @@ export default function DeletionConfirm({
         <div className="mt-4 flex justify-end gap-2">
           <button
             type="button"
-            className="px-4 py-2 rounded-md dark:bg-[#c9ad80] dark:hover:bg-[#b89a5e] dark:text-black bg-[#19e6a2] hover:bg-[#16b887] text-white cursor-pointer"
+            className="px-4 py-2 rounded-md dark:bg-[#c9ad80] dark:hover:bg-[#b89a5e] dark:text-black bg-green-950/80 hover:bg-green-950 text-white cursor-pointer"
             onClick={onClose}
             disabled={isLoading}
           >
