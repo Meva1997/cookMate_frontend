@@ -65,7 +65,15 @@ export default function EditRecipeInfo() {
         : "",
       category: recipe.category ?? "",
       image: recipe.image ?? "",
-      author: String(recipe.author ?? ""),
+      // author may be a string id or an object { _id, name }
+      author:
+        typeof recipe.author === "object"
+          ? String(
+              (recipe.author as { _id?: string; id?: string })._id ??
+                (recipe.author as { _id?: string; id?: string }).id ??
+                ""
+            )
+          : String(recipe.author ?? ""),
     });
 
     if (recipe.image) setImagePreview(recipe.image);
@@ -133,10 +141,13 @@ export default function EditRecipeInfo() {
         .split("\n")
         .map((s) => s.trim())
         .filter(Boolean),
-      author: formData.author,
+      // formData.author is the author id string (we saved _id into the hidden field)
+      author: String(formData.author),
     };
 
-    const prom = updateMutation.mutateAsync(payload);
+    const prom = updateMutation.mutateAsync(
+      payload as unknown as Partial<RecipeArray>
+    );
     return toast.promise(prom, {
       loading: "Updating recipe...",
       success: "Recipe updated",

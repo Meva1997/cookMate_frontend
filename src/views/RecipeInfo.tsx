@@ -64,9 +64,9 @@ export default function RecipeInfo() {
               By{" "}
               <Link
                 className="font-medium text-[#a1a1a1] dark:text-[#d2b48c] hover:opacity-90"
-                to={`/admin/${data.author}`}
+                to={`/admin/${data.author._id}`}
               >
-                {data.author.toString()}
+                {data.author.name.toString()}
               </Link>
               &nbsp;· In&nbsp;
               <a
