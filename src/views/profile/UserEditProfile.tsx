@@ -48,6 +48,7 @@ export default function UserEditProfile() {
       handle: data?.handle ?? "",
       name: data?.name ?? "",
       email: data?.email ?? "",
+      description: data?.description ?? "",
     },
   });
 
@@ -58,6 +59,7 @@ export default function UserEditProfile() {
         handle: data.handle ?? "",
         name: data.name ?? "",
         email: data.email ?? "",
+        description: data.description ?? "",
       });
     }
   }, [data, reset]);
@@ -203,7 +205,23 @@ export default function UserEditProfile() {
             )}
           </div>
 
-          {/* <input type="hidden" value={userId} id="author" /> */}
+          <div>
+            <label
+              htmlFor="description"
+              className="block text-sm font-medium text-[#0f172a] dark:text-[#e2e8f0] mb-2"
+            >
+              Description
+            </label>
+            <textarea
+              id="description"
+              placeholder="I'm a passionate home cook who loves to experiment with new recipes and flavors."
+              className="w-full rounded-lg px-4 py-3 bg-[#f6f8f7] dark:bg-[#2a2a2a] border border-[#e2e8f0] dark:border-[#334155] text-[#0f172a] dark:text-[#e2e8f0] placeholder-[#64748b] dark:placeholder-[#94a3b8] focus:outline-none focus:ring-[#19e6a2]/50 focus:border-[#19e6a2] dark:focus:ring-[#a4885a]/50 dark:focus:border-[#a4885a] transition-all"
+              {...register("description")}
+            />
+            {errors.description && (
+              <ErrorMessage>{errors.description.message}</ErrorMessage>
+            )}
+          </div>
 
           <div className="pt-4 flex space-x-2 justify-end">
             <Link

@@ -17,6 +17,7 @@ export default function RegisterView() {
     handle: "",
     name: "",
     email: "",
+    description: "",
     password: "",
     confirmPassword: "",
   };
@@ -131,6 +132,17 @@ export default function RegisterView() {
             })}
           />
           {errors.email && <ErrorMessage>{errors.email.message}</ErrorMessage>}
+        </div>
+        <div>
+          <label htmlFor="description" className="sr-only">
+            Description
+          </label>
+          <textarea
+            id="description"
+            placeholder="Description"
+            className="form-input w-full rounded-lg border-none bg-white dark:bg-black/20 p-4 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background-light dark:focus:ring-offset-background-dark"
+            {...register("description")}
+          />
         </div>
 
         <div>

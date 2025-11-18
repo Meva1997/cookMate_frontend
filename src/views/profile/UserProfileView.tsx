@@ -68,7 +68,9 @@ export default function UserProfileView() {
             {typeof data === "string" ? data : data?.name ?? ""}
           </h1>
           <p className="text-slate-500 dark:text-slate-400 mt-1">
-            Chef and food enthusiast
+            {typeof data === "string"
+              ? data
+              : data?.description ?? "No description available yet..."}
           </p>
           <p className="text-slate-500 dark:text-slate-400 mt-1">
             {typeof data === "string" ? data : data?.email ?? ""}

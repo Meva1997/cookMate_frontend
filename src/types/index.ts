@@ -3,6 +3,7 @@ export type User = {
   handle: string;
   name: string;
   email: string;
+  description?: string;
 };
 
 export type UserLoggedIn = {
@@ -10,13 +11,19 @@ export type UserLoggedIn = {
   handle: string;
   email: string;
 };
-export type UserSocial = Pick<User, "handle" | "name" | "email" | "id"> & {
+export type UserSocial = Pick<
+  User,
+  "handle" | "name" | "email" | "id" | "description"
+> & {
   _id: string;
   favorites: string[];
   recipes: string[];
 };
 
-export type RegisterForm = Pick<User, "handle" | "name" | "email"> & {
+export type RegisterForm = Pick<
+  User,
+  "handle" | "name" | "email" | "description"
+> & {
   password: string;
   confirmPassword: string;
 };
