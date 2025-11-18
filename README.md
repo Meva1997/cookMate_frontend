@@ -1,82 +1,75 @@
 # cookMate — Frontend
 
-This repository contains the frontend for cookMate, a recipe / cooking helper web application. The frontend is built with React + TypeScript and uses Vite as the dev tooling. It has been paired with a backend API (not included here).
+This repository contains the frontend for cookMate — a recipe-sharing web app. The app is built with React + TypeScript, uses Vite for development, and communicates with a separate backend REST API (see the `cookMate_backend` repo).
 
----
-
-## Screenshots
-
-![Login screen — cookMate](./public/cookMate-login.png)
-
-_Login page showing the email and password fields and primary CTA._
-
----
-
-## Table of contents
-
-- [Highlights](#highlights)
-- [Tech stack](#tech-stack)
-- [Getting started](#getting-started)
-- [Available scripts](#available-scripts)
-- [Environment variables](#environment-variables)
-- [Project structure](#project-structure)
-- [Backend](#backend)
-- [Development notes](#development-notes)
-- [Contributing](#contributing)
-- [License & contact](#license--contact)
+This README documents how to run the project and summarizes the most relevant parts of the current codebase and developer workflows.
 
 ---
 
 ## Highlights
 
-- Fast development powered by Vite and TypeScript
+- React + TypeScript
+- Vite for fast dev + HMR
 - Tailwind CSS for utility-first styling
-- React with hooks and react-router for routing
-- Form handling with react-hook-form
-- HTTP client: axios
-- Toasts/notifications using Sonner
-- Linting with ESLint
+- React Query (@tanstack/react-query) for data fetching and caching
+- Axios as the HTTP client (centralized `src/config/axios.ts` with auth helper)
+- react-hook-form for form handling
+- Sonner for toasts/notifications
+- pnpm (recommended) for package management; npm/yarn supported
+
+Recent features in this codebase
+
+- Paginated APIs for recipes and users (`getAllRecipes` and `getAllUsersPaged`) with frontend use of `useInfiniteQuery`.
+- Upload-first image flow for recipes (upload image → receive URL → submit recipe).
+- Edit recipe UI (prefill, change/remove image) and delete confirmation modal.
+- Shared `Logo` component and other small UI components (`Spinner`, `DeletionConfirm`, `ShowPassword`, `HidePassword`, etc.).
 
 ---
+
+## Screenshots
+
+![Pantalla de inicio de sesión de cookMate](./public/cookMate-login.png)
+
+Login page showing the email and password fields.
+
+--
 
 ## Tech stack
 
 - Framework: React (TypeScript)
 - Tooling: Vite
 - Styling: Tailwind CSS
+- Data fetching: @tanstack/react-query
 - HTTP: axios
 - Forms: react-hook-form
 - Routing: react-router-dom
 - Notifications: sonner
 - Linting: ESLint
-- Package manager: pnpm (pnpm-lock.yaml exists), npm or yarn also supported
-
-Dependencies and devDependencies are listed in package.json.
 
 ---
 
 ## Getting started
 
-Prerequisites:
+Prerequisites
 
-- Node.js (recommended 18+)
-- pnpm (recommended) or npm / yarn
+- Node.js 18+
+- pnpm (recommended) or npm/yarn
 
-Install dependencies:
-
-Using pnpm (recommended):
+Install dependencies (frontend):
 
 ```bash
 pnpm install
-```
-
-Using npm:
-
-```bash
+# or
 npm install
 ```
 
-Run development server:
+Add environment variables (create a `.env.local` or `.env` in `frontend/`):
+
+```
+VITE_API_URL=http://localhost:4000/api
+```
+
+Run the frontend dev server:
 
 ```bash
 pnpm dev
@@ -84,110 +77,97 @@ pnpm dev
 npm run dev
 ```
 
-Build for production:
+Start the backend (from the backend repo) so the frontend can talk to the API:
 
 ```bash
-pnpm build
-# or
-npm run build
-```
-
-Preview production build:
-
-```bash
-pnpm preview
-# or
-npm run preview
-```
-
-Run linter:
-
-```bash
-pnpm lint
-# or
-npm run lint
+# from /path/to/cookMate_backend
+pnpm install
+pnpm dev
 ```
 
 ---
 
-## Available scripts (from package.json)
+## Available scripts (package.json)
 
-- dev — start Vite dev server
-- build — TypeScript build + Vite build
-- lint — run ESLint across the project
-- preview — preview the production build
+- `dev` — start Vite dev server (local development)
+- `build` — build production assets
+- `preview` — preview a production build
+- `lint` — run ESLint
 
 ---
 
 ## Environment variables
 
-This project uses Vite, so environment variables exposed to the client must start with VITE\_. Example:
+Client-side environment variables must start with `VITE_`.
 
-- VITE_API_URL=https://api.example.com
+- `VITE_API_URL` — base URL for the backend API (e.g. `http://localhost:4000/api`).
 
-Create a `.env` or `.env.local` in the project root and add:
-
-```
-VITE_API_URL=https://your-backend.example
-```
-
-Then access with import.meta.env.VITE_API_URL in code.
+The project also stores the auth token in `localStorage` and sets `Authorization: Bearer <token>` automatically via `src/config/axios.ts` when present.
 
 ---
 
-## Project structure (top-level)
+## Project structure (key files)
 
-- index.html
-- package.json
-- pnpm-lock.yaml
-- vite.config.ts
-- tsconfig.json / tsconfig.\*.json
-- eslint.config.js
-- public/ — static assets
-- src/ — application source code (components, pages, routes, styles, etc.)
+Top-level
 
-(Adjust layout details inside src/ as needed for your app.)
+- `index.html`, `package.json`, `pnpm-lock.yaml`, `vite.config.ts`, `tsconfig.json`
 
----
+Important folders
 
-## Backend
-
-The backend for cookMate is in a separate repository:
-
-- cookMate_backend: https://github.com/Meva1997/cookMate_backend
-
-Description: RESTful API for a recipe app. Handles user authentication, recipe management, favorites, likes, and comments. Provides secure endpoints for creating, editing, and deleting recipes, as well as managing user profiles and interactions.
-
-Set the frontend environment variable VITE_API_URL to point to the backend API base URL (for example, `https://api.example.com` or your local backend server).
+- `src/`
+  - `main.tsx` — app bootstrap and router
+  - `api/CookMateAPI.ts` — centralized axios calls and typed API helpers (includes `getAllRecipes`, `getAllUsersPaged`, `uploadRecipeImage`, `updateRecipeById`, `deleteRecipeById`)
+  - `config/axios.ts` — axios instance and `setAuthToken` helper
+  - `layouts/` — `AuthLayout`, `HomeLayout`, `ProfileLayout` (use shared `Logo`)
+  - `views/` — page views like `HomeView`, `HomeRecipesView`, `HomeUsersView`, auth views and profile views
+  - `components/` — reusable UI pieces: `Logo.tsx`, `Spinner.tsx`, `DeletionConfirm.tsx`, `DeleteRecipeButton.tsx`, password toggles, etc.
+  - `db/` — seed/static data (e.g. categories)
+  - `tests/` — unit and integration tests (if present in repo)
 
 ---
 
-## Development notes
+## API contract notes (frontend <-> backend)
 
-- This project includes TypeScript configuration and ESLint. Keep types and lint rules up to date when adding new dependencies or patterns.
-- Tailwind is configured; update tailwind config or design tokens in the src/styles area.
-- Use react-router-dom for client-side routing and organize routes under src/pages or src/routes.
-- For forms, prefer react-hook-form for performant form handling and validation.
+- `GET /recipes?page=1&limit=20` → returns paged shape:
+  ```json
+  { "recipes": [...], "page": 1, "limit": 20, "total": 123, "hasMore": true }
+  ```
+- `GET /user?page=1&limit=20` → returns paged users: `{ users: [...], page, limit, total, hasMore }`.
+- `POST /recipes/upload-image` — accepts multipart/form-data and returns `{ imageUrl: "https://..." }`.
+- `PUT /recipes/:id` — update recipe; server checks author ownership.
+- `DELETE /recipes/:id` — delete recipe; server checks author ownership and removes references.
+
+The frontend includes helpers and components that assume these shapes (see `src/api/CookMateAPI.ts` and the `HomeRecipesView` / `HomeUsersView` implementations).
+
+---
+
+## Developer notes & conventions
+
+- Use `react-query` keys consistently (examples in code: `['getAllRecipes']`, `['userProfile', userId]`, `['recipeInfo', recipeId]`).
+- Upload-first flow: upload images first → get URL → include URL in create/update payload for the recipe.
+- Keep `dark:` Tailwind classes for dark mode; many components apply `bg-green-950/80` for the primary light-mode styles.
+- When updating requests/responses, update the corresponding helper in `src/api/CookMateAPI.ts` and adjust react-query consumers.
 
 ---
 
 ## Contributing
 
-Contributions are welcome:
-
-- Open an issue to discuss a feature or bug.
-- Fork the repo, create a feature branch, and submit a pull request.
-- Keep commits small and focused; include descriptive PR titles and descriptions.
-- Run and pass linting before submitting PRs.
+- Open an issue first if the change is non-trivial.
+- Fork, create a branch, and open a pull request. Keep changes focused and include tests where appropriate.
+- Run linting before submitting PRs: `pnpm lint`.
 
 ---
 
-## License & contact
+## Backend
 
-No license file is included in this repository. If you want to add one, create a LICENSE file (e.g., MIT) at the project root.
+Backend repo: https://github.com/Meva1997/cookMate_backend
 
-Repository owner / contact:
-
-- GitHub: https://github.com/Meva1997
+The backend exposes REST endpoints for auth, recipes, users, favorites and comments. The frontend expects the API to return the paged shapes described above for lists.
 
 ---
+
+## Contact / License
+
+- Owner: https://github.com/Meva1997
+
+If you want a license file added, create a `LICENSE` at the project root (e.g. MIT).
