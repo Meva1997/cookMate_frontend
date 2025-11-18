@@ -1,22 +1,32 @@
 import { Link } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { getAllRecipes } from "../../api/CookMateAPI";
+import type { RecipesPage } from "../../api/CookMateAPI";
 import Spinner from "../../components/Spinner";
 import { useState } from "react";
 import { categories } from "../../db";
-import type { RecipeArray } from "../../types";
 
 export default function HomeRecipesView() {
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const { data, isLoading, isError } = useQuery<RecipeArray[]>({
+  const Limit = 20;
+
+  const {
+    data,
+    isLoading,
+    isError,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery<RecipesPage, Error>({
     queryKey: ["getAllRecipes"],
-    queryFn: async (): Promise<RecipeArray[]> => {
-      const res = await getAllRecipes();
-      if (!res || typeof res === "string") {
-        throw new Error("Failed to fetch recipes");
-      }
-      return res;
+    queryFn: async ({ pageParam }: { pageParam?: unknown }) => {
+      const page = typeof pageParam === "number" ? pageParam : 1;
+      const res = await getAllRecipes(page, Limit);
+      return res as RecipesPage;
     },
+    getNextPageParam: (lastPage: RecipesPage) =>
+      lastPage?.hasMore ? lastPage.page + 1 : undefined,
+    initialPageParam: 1,
     retry: 1,
     refetchOnWindowFocus: false,
   });
@@ -29,14 +39,19 @@ export default function HomeRecipesView() {
     return <div className="text-sm text-red-600">Error loading recipes.</div>;
   }
   // Add type guard to ensure data is an array before mapping
-  if (!data || !Array.isArray(data)) {
+  if (!data || !data.pages) {
     return <div className="text-sm text-red-600">No recipes found.</div>;
   }
 
-  //filter recipe by category selected
+  // flatten pages into a single array
+  const allRecipes = (data.pages as RecipesPage[]).flatMap(
+    (p) => p.recipes ?? []
+  );
+
+  // filter recipe by category selected
   const filterRecipesByCategory = (category: string) => {
-    if (category === "All") return data;
-    return data.filter((recipe) => recipe.category === category);
+    if (category === "All") return allRecipes;
+    return allRecipes.filter((recipe) => recipe.category === category);
   };
 
   const filtered = filterRecipesByCategory(selectedCategory);
@@ -89,6 +104,20 @@ export default function HomeRecipesView() {
           <div className="text-xl text-center col-span-full text-red-600 animate-pulse my-20">
             No recipes found for the selected category.
           </div>
+        )}
+      </div>
+
+      <div className="mt-8 text-center">
+        {hasNextPage ? (
+          <button
+            onClick={() => fetchNextPage()}
+            disabled={isFetchingNextPage}
+            className="px-6 py-2 rounded-md bg-green-950/80 text-white hover:bg-green-950"
+          >
+            {isFetchingNextPage ? "Loading..." : "Load more"}
+          </button>
+        ) : (
+          <div className="text-sm text-gray-500 mt-2">No more recipes</div>
         )}
       </div>
     </article>

@@ -1,9 +1,40 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import type { UserSocial } from "../../types";
+import { getAllUsersPaged } from "../../api/CookMateAPI";
+import type { UsersPage } from "../../api/CookMateAPI";
+import Spinner from "../../components/Spinner";
 
-export default function HomeUsersView({ data }: { data: UserSocial[] }) {
+export default function HomeUsersView({ data }: { data?: UserSocial[] }) {
   const [searchTerm, setSearchTerm] = useState("");
+  const Limit = 20;
+
+  const {
+    data: pagedData,
+    isLoading,
+    isError,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery<UsersPage, Error>({
+    queryKey: ["getAllUsersPaged"],
+    queryFn: async ({ pageParam }: { pageParam?: unknown }) => {
+      const page = typeof pageParam === "number" ? pageParam : 1;
+      const res = await getAllUsersPaged(page, Limit);
+      if (!res || typeof res === "string") {
+        // surface API errors to react-query
+        throw new Error(String(res ?? "Failed to load users"));
+      }
+      return res as UsersPage;
+    },
+    getNextPageParam: (lastPage: UsersPage) =>
+      lastPage?.hasMore ? lastPage.page + 1 : undefined,
+    initialPageParam: 1,
+    retry: 1,
+    refetchOnWindowFocus: false,
+  });
 
   const filterUsers = (users: UserSocial[], term: string) => {
     if (!term) return users;
@@ -15,7 +46,33 @@ export default function HomeUsersView({ data }: { data: UserSocial[] }) {
     );
   };
 
-  const filteredData = filterUsers(data, searchTerm);
+  // If `data` prop is provided, keep legacy behavior (non-paged). Otherwise use paged data from the API.
+  let usersToRender: UserSocial[] = [];
+  if (Array.isArray(data)) {
+    usersToRender = data;
+  } else {
+    if (isLoading) return <Spinner />;
+    if (isError) {
+      console.error("HomeUsersView: paged users load failed", {
+        pagedData,
+        error,
+      });
+      return (
+        <div className="text-sm text-red-600">
+          Error loading users: {error?.message ?? "Unknown error"}
+        </div>
+      );
+    }
+    if (!pagedData || !pagedData.pages) {
+      usersToRender = [];
+    } else {
+      usersToRender = (pagedData.pages as UsersPage[]).flatMap(
+        (p) => p.users ?? []
+      );
+    }
+  }
+
+  const filteredData = filterUsers(usersToRender, searchTerm);
 
   return (
     <section className="max-w-5xl mx-auto py-8 px-4">
@@ -87,6 +144,23 @@ export default function HomeUsersView({ data }: { data: UserSocial[] }) {
           </li>
         ))}
       </ul>
+
+      {/* Pagination controls for paged API (only when not receiving `data` prop) */}
+      {!Array.isArray(data) && (
+        <div className="mt-6 text-center">
+          {hasNextPage ? (
+            <button
+              onClick={() => fetchNextPage()}
+              disabled={isFetchingNextPage}
+              className="px-6 py-2 rounded-md bg-green-950/80 text-white hover:bg-green-950"
+            >
+              {isFetchingNextPage ? "Loading..." : "Load more"}
+            </button>
+          ) : (
+            <div className="text-sm text-gray-500 mt-2">No more users</div>
+          )}
+        </div>
+      )}
     </section>
   );
 }

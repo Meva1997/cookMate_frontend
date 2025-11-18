@@ -4,7 +4,36 @@ import type { RecipeArray, User, UserSocial, UserWithRecipes } from "../types";
 
 export async function getAllUsers() {
   try {
-    const { data } = await api.get<UserSocial[]>(`/user`);
+    const { data } = await api.get(`/user`);
+    // Backwards-compatible: if the API returns a paged shape, return the users array
+    if (
+      data &&
+      typeof data === "object" &&
+      Array.isArray((data as any).users)
+    ) {
+      return (data as any).users as UserSocial[];
+    }
+    return data as UserSocial[];
+  } catch (err) {
+    if (isAxiosError(err) && err.response?.data?.error) {
+      return String(err.response.data.error);
+    }
+  }
+}
+
+export type UsersPage = {
+  users: UserSocial[];
+  page: number;
+  limit: number;
+  total: number;
+  hasMore: boolean;
+};
+
+export async function getAllUsersPaged(page = 1, limit = 20) {
+  try {
+    const { data } = await api.get<UsersPage>(`/user`, {
+      params: { page, limit },
+    });
     return data;
   } catch (err) {
     if (isAxiosError(err) && err.response?.data?.error) {
@@ -80,9 +109,19 @@ export async function getUserFavorites(userId: string) {
   }
 }
 
-export async function getAllRecipes() {
+export type RecipesPage = {
+  recipes: RecipeArray[];
+  page: number;
+  limit: number;
+  total: number;
+  hasMore: boolean;
+};
+
+export async function getAllRecipes(page = 1, limit = 20) {
   try {
-    const { data } = await api.get<RecipeArray[]>(`/recipes`);
+    const { data } = await api.get<RecipesPage>(`/recipes`, {
+      params: { page, limit },
+    });
     return data;
   } catch (err) {
     if (isAxiosError(err) && err.response?.data?.error) {
