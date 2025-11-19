@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import type { UserSocial } from "../../types";
 import { getAllUsersPaged } from "../../api/CookMateAPI";
-import type { UsersPage } from "../../api/CookMateAPI";
+import type { UsersPage } from "../../types";
 import Spinner from "../../components/Spinner";
 
 export default function HomeUsersView({ data }: { data?: UserSocial[] }) {

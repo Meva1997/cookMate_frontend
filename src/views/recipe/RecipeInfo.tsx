@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { getRecipeById } from "../api/CookMateAPI";
+import { getRecipeById } from "../../api/CookMateAPI";
 import { Link, useParams } from "react-router-dom";
-import Spinner from "../components/Spinner";
+import Spinner from "../../components/Spinner";
+import RecipeComments from "./RecipeComments";
 
 export default function RecipeInfo() {
   const { recipeId } = useParams<{ recipeId: string }>();
@@ -13,7 +14,6 @@ export default function RecipeInfo() {
     retry: 1,
     refetchOnWindowFocus: false,
   });
-  console.log("🚀 ~ RecipeInfo ~ data:", data);
 
   if (isLoading) {
     return (
@@ -159,82 +159,7 @@ export default function RecipeInfo() {
               </div>
             </div>
 
-            <div
-              className="mt-10 border-t"
-              style={{ borderColor: "rgba(210,180,140,0.2)" }}
-            >
-              <div className="pt-8">
-                <h3 className="text-xl font-bold text-[#1f1f1f] dark:text-[#f0eade]">
-                  Comments
-                </h3>
-                <div className="mt-4 space-y-6">
-                  <div className="flex items-start gap-4">
-                    <div
-                      className="h-10 w-10 shrink-0 rounded-full bg-cover bg-center"
-                      style={{
-                        backgroundImage:
-                          "url('https://picsum.photos/seed/c1/200')",
-                      }}
-                    />
-                    <div className="flex-1">
-                      <form className="relative">
-                        <input
-                          className="w-full rounded-lg p-4 pr-28 text-sm border-2 border-green-950/80 dark:border-[#c9ad80] focus:outline-none focus:ring-2 focus:ring-green-950/50 dark:focus:ring-[#c9ad80]"
-                          placeholder="Add a comment..."
-                        />
-                        <button className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md px-4 py-2 font-semibold bg-green-950/80 dark:bg-[#c9ad80] text-white ">
-                          Post
-                        </button>
-                      </form>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-4">
-                    <div
-                      className="h-10 w-10 shrink-0 rounded-full bg-cover bg-center"
-                      style={{
-                        backgroundImage:
-                          "url('https://picsum.photos/seed/c2/200')",
-                      }}
-                    />
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2">
-                        <p className="text-sm font-semibold text-[#1f1f1f] dark:text-[#f0eade]">
-                          Emily Carter
-                        </p>
-                        <p className="text-xs text-[#8a8a8a]">2 weeks ago</p>
-                      </div>
-                      <p className="mt-1 text-sm text-[#1f1f1f] dark:text-[#f0eade]">
-                        This recipe is amazing! So easy and delicious. My family
-                        loved it.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-4">
-                    <div
-                      className="h-10 w-10 shrink-0 rounded-full bg-cover bg-center"
-                      style={{
-                        backgroundImage:
-                          "url('https://picsum.photos/seed/c3/200')",
-                      }}
-                    />
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2">
-                        <p className="text-sm font-semibold text-[#1f1f1f] dark:text-[#f0eade]">
-                          David Lee
-                        </p>
-                        <p className="text-xs text-[#8a8a8a]">1 week ago</p>
-                      </div>
-                      <p className="mt-1 text-sm text-[#1f1f1f] dark:text-[#f0eade]">
-                        I added some grilled chicken to this and it was perfect.
-                        Thanks for sharing!
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <RecipeComments />
 
             <div
               className="mt-10 border-t"
