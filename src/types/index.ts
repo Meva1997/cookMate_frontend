@@ -6,6 +6,14 @@ export type User = {
   description?: string;
 };
 
+export type UsersPage = {
+  users: UserSocial[];
+  page: number;
+  limit: number;
+  total: number;
+  hasMore: boolean;
+};
+
 export type UserLoggedIn = {
   id: string;
   handle: string;
@@ -42,6 +50,14 @@ export type CreateRecipeForm = {
   author: string;
 };
 
+export type RecipesPage = {
+  recipes: RecipeArray[];
+  page: number;
+  limit: number;
+  total: number;
+  hasMore: boolean;
+};
+
 export type RecipeArray = {
   _id: string;
   title: string;
@@ -65,4 +81,14 @@ export type UserWithRecipes = {
   email: string;
   favorites: string[];
   recipes: RecipeArray[];
+};
+export type Comment = {
+  _id: string;
+  author: {
+    _id: string;
+    handle: string;
+  };
+  recipe: string;
+  text: string;
+  __v: number;
 };

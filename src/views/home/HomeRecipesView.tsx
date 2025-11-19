@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { getAllRecipes } from "../../api/CookMateAPI";
-import type { RecipesPage } from "../../api/CookMateAPI";
+import type { RecipesPage } from "../../types";
 import Spinner from "../../components/Spinner";
 import { useState } from "react";
 import { categories } from "../../db";

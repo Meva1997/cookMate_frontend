@@ -32,7 +32,7 @@ Recent features in this codebase
 
 Login page showing the email and password fields.
 
---
+---
 
 ## Tech stack
 
