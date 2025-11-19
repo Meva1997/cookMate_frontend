@@ -15,7 +15,7 @@ export default function HomeLayout() {
 
   if (data)
     return (
-      <div className="flex flex-col min-h-screen bg-gray-300/40  dark:bg-black font-display  dark:text-white">
+      <div className="flex flex-col min-h-screen bg-gray-300  dark:bg-black font-display  dark:text-white">
         <header className="sticky top-0 z-50 backdrop-blur-sm bg-white dark:bg-black">
           <nav className="container mx-auto px-6 py-4 flex items-center justify-between">
             <div className="flex items-center gap-4">

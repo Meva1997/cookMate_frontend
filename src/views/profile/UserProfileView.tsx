@@ -101,7 +101,7 @@ export default function UserProfileView() {
         )}
 
         <section className="mt-12 w-full">
-          <div className="border-b border-slate-200 dark:border-slate-800">
+          <div className="border-b border-slate-400 dark:border-slate-800">
             <nav
               aria-label="Tabs"
               role="tablist"

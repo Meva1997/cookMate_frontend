@@ -207,3 +207,47 @@ export async function deleteComment(recipeId: string, commentId: string) {
     }
   }
 }
+
+export async function likeRecipe(recipeId: string) {
+  try {
+    const { data } = await api.post(`/recipes/${recipeId}/like`);
+    return data;
+  } catch (err) {
+    if (isAxiosError(err) && err.response?.data?.error) {
+      return String(err.response.data.error);
+    }
+  }
+}
+
+export async function unlikeRecipe(recipeId: string) {
+  try {
+    const { data } = await api.delete(`/recipes/${recipeId}/like`);
+    return data;
+  } catch (err) {
+    if (isAxiosError(err) && err.response?.data?.error) {
+      return String(err.response.data.error);
+    }
+  }
+}
+
+export async function favoriteRecipe(recipeId: string) {
+  try {
+    const { data } = await api.post(`/recipes/${recipeId}/favorite`);
+    return data;
+  } catch (err) {
+    if (isAxiosError(err) && err.response?.data?.error) {
+      return String(err.response.data.error);
+    }
+  }
+}
+
+export async function unfavoriteRecipe(recipeId: string) {
+  try {
+    const { data } = await api.delete(`/recipes/${recipeId}/favorite`);
+    return data;
+  } catch (err) {
+    if (isAxiosError(err) && err.response?.data?.error) {
+      return String(err.response.data.error);
+    }
+  }
+}
