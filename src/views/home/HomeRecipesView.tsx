@@ -87,7 +87,7 @@ export default function HomeRecipesView() {
                   style={{ backgroundImage: `url('${c.image}')` }}
                 />
               </div>
-              <h3 className="text-lg font-bold">{c.title}</h3>
+              <h3 className="text-lg font-bold">Title: {c.title}</h3>
               <p className="text-sm dark:text-white">By: {c.author.name}</p>
               <div className="flex items-center text-sm dark:text-white mt-2 space-x-2">
                 <span>{c.likes.length} ❤️</span>

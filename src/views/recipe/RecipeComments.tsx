@@ -8,6 +8,8 @@ import { Link, useParams } from "react-router-dom";
 import CreateComment from "./CreateComment";
 import type { Comment, UserLoggedIn } from "../../types";
 import { toast } from "sonner";
+import { getFormattedDate, getRelativeTime } from "../../utils";
+import { useState } from "react";
 
 export default function RecipeComments() {
   const { recipeId } = useParams<{ recipeId: string }>();
@@ -41,8 +43,19 @@ export default function RecipeComments() {
     },
   });
 
-  const handleDeleteComment = (recipeId: string, commentId: string) => {
-    mutation.mutate(commentId);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  const handleDeleteComment = async (_recipeId: string, commentId: string) => {
+    if (!commentId) return;
+    setDeletingId(commentId);
+    try {
+      // wait for the mutation so deletingId remains set during the request
+      await mutation.mutateAsync(commentId);
+    } catch {
+      // error toast is handled in mutation.onError
+    } finally {
+      setDeletingId(null);
+    }
   };
 
   return (
@@ -73,18 +86,26 @@ export default function RecipeComments() {
                       }}
                     />
                   </Link>
-                  <div className="flex-1">
+                  <div className="flex-1 w-1/2">
                     <div className="flex items-center gap-2">
                       <p className="text-sm font-semibold text-[#1f1f1f] dark:text-[#f0eade]">
-                        {comment.author.handle}
+                        {comment.author.name}
                       </p>
                       <p className="text-xs text-[#8a8a8a]">
                         @{comment.author.handle}
                       </p>
                     </div>
-                    <p className="mt-1 text-sm text-[#1f1f1f] dark:text-[#f0eade]">
+                    <p className="mt-1 text-sm text-[#1f1f1f] dark:text-[#f0eade] wrap-break-word">
                       {comment.text}
                     </p>
+                    <div className="flex space-x-4 mt-2">
+                      <p className="text-xs text-[#8a8a8a]">
+                        {getRelativeTime(comment.createdAt)}
+                      </p>
+                      <p className="text-xs text-[#8a8a8a]">
+                        {getFormattedDate(comment.createdAt)}
+                      </p>
+                    </div>
                   </div>
                   {meData?.id === comment.author._id ? (
                     <div className="bg-red-500/20 p-2 rounded-md hover:bg-red-500/40 cursor-pointer">
@@ -93,9 +114,9 @@ export default function RecipeComments() {
                         onClick={() =>
                           handleDeleteComment(recipeId as string, comment._id)
                         }
-                        disabled={mutation.isPending}
+                        disabled={deletingId === comment._id}
                       >
-                        {mutation.isPending ? "Deleting..." : "Delete"}
+                        {deletingId === comment._id ? "Deleting..." : "Delete"}
                       </button>
                     </div>
                   ) : null}

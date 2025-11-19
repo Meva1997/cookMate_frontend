@@ -116,6 +116,23 @@ export async function getAllRecipes(page = 1, limit = 20) {
   }
 }
 
+export async function getRecipesByCategory(
+  category: string,
+  page = 1,
+  limit = 6
+) {
+  try {
+    const { data } = await api.get(`/recipes`, {
+      params: { category, page, limit },
+    });
+    return data;
+  } catch (err) {
+    if (isAxiosError(err) && err.response?.data?.error) {
+      return String(err.response.data.error);
+    }
+  }
+}
+
 export async function uploadRecipeImage(file: File) {
   const formData = new FormData();
   formData.append("file", file);

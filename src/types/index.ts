@@ -87,8 +87,10 @@ export type Comment = {
   author: {
     _id: string;
     handle: string;
+    name: string;
   };
   recipe: string;
   text: string;
+  createdAt: string;
   __v: number;
 };

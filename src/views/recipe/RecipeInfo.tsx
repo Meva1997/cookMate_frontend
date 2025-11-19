@@ -3,6 +3,7 @@ import { getRecipeById } from "../../api/CookMateAPI";
 import { Link, useParams } from "react-router-dom";
 import Spinner from "../../components/Spinner";
 import RecipeComments from "./RecipeComments";
+import RecipeSimilar from "./RecipeSimilar";
 
 export default function RecipeInfo() {
   const { recipeId } = useParams<{ recipeId: string }>();
@@ -166,28 +167,7 @@ export default function RecipeInfo() {
               style={{ borderColor: "rgba(210,180,140,0.2)" }}
             >
               <div className="pt-8">
-                <h3 className="text-xl font-bold text-[#1f1f1f] dark:text-[#f0eade]">
-                  Similar Recipes
-                </h3>
-                <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3 md:gap-x-6">
-                  {["Pesto Pasta", "Garlic Shrimp Pasta", "Mushroom Pasta"].map(
-                    (t, i) => (
-                      <a key={t} className="group" href="#">
-                        <div className="aspect-video w-full overflow-hidden rounded-lg shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05)]">
-                          <div
-                            className="h-full w-full bg-cover bg-center transition-transform duration-300 group-hover:scale-105"
-                            style={{
-                              backgroundImage: `url('https://picsum.photos/seed/sim-${i}/600')`,
-                            }}
-                          />
-                        </div>
-                        <p className="mt-2 text-sm font-medium text-[#1f1f1f] dark:text-[#f0eade] group-hover:text-[#d2b48c]">
-                          {t}
-                        </p>
-                      </a>
-                    )
-                  )}
-                </div>
+                <RecipeSimilar data={data.category} currentId={data._id} />
               </div>
             </div>
           </div>
