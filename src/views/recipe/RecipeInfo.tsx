@@ -1,9 +1,18 @@
-import { useQuery } from "@tanstack/react-query";
-import { getRecipeById } from "../../api/CookMateAPI";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  getRecipeById,
+  likeRecipe,
+  unlikeRecipe,
+  favoriteRecipe,
+  unfavoriteRecipe,
+  getUserProfileData,
+} from "../../api/CookMateAPI";
+import type { RecipeArray, UserLoggedIn } from "../../types";
 import { Link, useParams } from "react-router-dom";
 import Spinner from "../../components/Spinner";
 import RecipeComments from "./RecipeComments";
 import RecipeSimilar from "./RecipeSimilar";
+import { useState } from "react";
 
 export default function RecipeInfo() {
   const { recipeId } = useParams<{ recipeId: string }>();
@@ -15,6 +24,80 @@ export default function RecipeInfo() {
     retry: 1,
     refetchOnWindowFocus: false,
   });
+
+  // current logged-in user (to determine if they liked/favorited)
+  const { data: meData } = useQuery<UserLoggedIn>({
+    queryKey: ["userProfileInfo"],
+    queryFn: () => getUserProfileData(),
+    retry: 1,
+    refetchOnWindowFocus: false,
+  });
+
+  const queryClient = useQueryClient();
+  const [loadingLike, setLoadingLike] = useState(false);
+  const [loadingFav, setLoadingFav] = useState(false);
+
+  const likeMut = useMutation({
+    mutationFn: (id: string) => likeRecipe(id),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["recipeInfo", recipeId] }),
+  });
+
+  const unlikeMut = useMutation({
+    mutationFn: (id: string) => unlikeRecipe(id),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["recipeInfo", recipeId] }),
+  });
+
+  const favMut = useMutation({
+    mutationFn: (id: string) => favoriteRecipe(id),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["recipeInfo", recipeId] }),
+  });
+
+  const unfavMut = useMutation({
+    mutationFn: (id: string) => unfavoriteRecipe(id),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["recipeInfo", recipeId] }),
+  });
+
+  const isLiked = Boolean(
+    data &&
+      typeof data !== "string" &&
+      meData &&
+      Array.isArray((data as RecipeArray).likes) &&
+      (data as RecipeArray).likes.some((u) => String(u) === meData.id)
+  );
+
+  const isFavorited = Boolean(
+    data &&
+      typeof data !== "string" &&
+      meData &&
+      Array.isArray((data as RecipeArray).favorites) &&
+      (data as RecipeArray).favorites.some((u) => String(u) === meData.id)
+  );
+
+  const handleLikeClick = async () => {
+    if (!recipeId) return;
+    setLoadingLike(true);
+    try {
+      if (isLiked) await unlikeMut.mutateAsync(recipeId);
+      else await likeMut.mutateAsync(recipeId);
+    } finally {
+      setLoadingLike(false);
+    }
+  };
+
+  const handleFavClick = async () => {
+    if (!recipeId) return;
+    setLoadingFav(true);
+    try {
+      if (isFavorited) await unfavMut.mutateAsync(recipeId);
+      else await favMut.mutateAsync(recipeId);
+    } finally {
+      setLoadingFav(false);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -39,7 +122,7 @@ export default function RecipeInfo() {
   if (data)
     return (
       <main className="container mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
-        <section className="flex space-x-2">
+        <section className="flex space-x-2 ">
           <div className="mb-4 p-2 dark:bg-[#c9ad80] rounded-lg w-1/4 dark:text-black font-bold text-center dark:hover:bg-[#bfa46f] cursor-pointer transition-colors bg-green-950/80 text-white hover:bg-green-950">
             <Link to={`/admin/${userId}`}>Go to author's profile</Link>
           </div>
@@ -47,7 +130,7 @@ export default function RecipeInfo() {
             <Link to={"/home"}>Back to home</Link>
           </div>
         </section>
-        <div className="overflow-hidden rounded-xl shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05)] bg-[#f8f5f2] dark:bg-[#2a2a2a]">
+        <section className="overflow-hidden rounded-xl shadow-lg shadow-black bg-[#f8f5f2] dark:bg-[#2a2a2a]">
           <div
             className="aspect-3/2 w-full bg-cover bg-center rounded-t-xl"
             style={{
@@ -59,19 +142,19 @@ export default function RecipeInfo() {
 
           <div className="p-6 md:p-8">
             <h1 className="text-3xl font-bold tracking-tight text-[#1f1f1f] dark:text-[#f0eade] sm:text-4xl">
-              {data.title}
+              Title: {data.title}
             </h1>
             <p className="mt-2 text-sm text-[#a1a1a1] dark:text-[#8a8a8a]">
               By{" "}
               <Link
-                className="font-medium text-[#a1a1a1] dark:text-[#d2b48c] hover:opacity-90"
+                className="font-bold text-green-900 dark:text-[#d2b48c] hover:opacity-90"
                 to={`/admin/${data.author._id}`}
               >
                 {data.author.name.toString()}
               </Link>
               &nbsp;· In&nbsp;
               <a
-                className="font-medium text-[#a1a1a1] dark:text-[#d2b48c] hover:opacity-90"
+                className="font-bold text-green-900 dark:text-[#d2b48c] hover:opacity-90"
                 href="#"
               >
                 {data.category.toString()}
@@ -80,8 +163,14 @@ export default function RecipeInfo() {
 
             <div className="mt-4 flex items-center gap-6">
               <button
-                className="flex items-center gap-2 text-[#a1a1a1] dark:text-[#8a8a8a] hover:text-[#d2b48c]"
+                className={`flex items-center gap-2 hover:text-[#d2b48c] ${
+                  isLiked
+                    ? "text-red-500 dark:text-red-400"
+                    : "text-[#a1a1a1] dark:text-[#8a8a8a]"
+                }`}
                 aria-label="likes"
+                onClick={handleLikeClick}
+                disabled={loadingLike}
               >
                 <svg
                   fill="currentColor"
@@ -92,12 +181,22 @@ export default function RecipeInfo() {
                 >
                   <path d="M178,32c-20.65,0-38.73,8.88-50,23.89C116.73,40.88,98.65,32,78,32A62.07,62.07,0,0,0,16,94c0,70,103.79,126.66,108.21,129a8,8,0,0,0,7.58,0C136.21,220.66,240,164,240,94A62.07,62.07,0,0,0,178,32ZM128,206.8C109.74,196.16,32,147.69,32,94A46.06,46.06,0,0,1,78,48c19.45,0,35.78,10.36,42.6,27a8,8,0,0,0,14.8,0c6.82-16.67,23.15-27,42.6-27a46.06,46.06,0,0,1,46,46C224,147.61,146.24,196.15,128,206.8Z" />
                 </svg>
-                <span className="text-sm font-medium">{data.likes.length}</span>
+                <span className="text-sm font-medium">
+                  {typeof data === "string"
+                    ? 0
+                    : (data as RecipeArray).likes.length}
+                </span>
               </button>
 
               <button
-                className="flex items-center gap-2 text-[#a1a1a1] dark:text-[#8a8a8a] hover:text-[#d2b48c]"
+                className={`flex items-center gap-2 hover:text-[#d2b48c] ${
+                  isFavorited
+                    ? "text-yellow-500 dark:text-yellow-400"
+                    : "text-[#a1a1a1] dark:text-[#8a8a8a]"
+                }`}
                 aria-label="bookmarks"
+                onClick={handleFavClick}
+                disabled={loadingFav}
               >
                 <svg
                   fill="currentColor"
@@ -109,7 +208,9 @@ export default function RecipeInfo() {
                   <path d="M184,32H72A16,16,0,0,0,56,48V224a8,8,0,0,0,12.24,6.78L128,193.43l59.77,37.35A8,8,0,0,0,200,224V48A16,16,0,0,0,184,32Zm0,177.57-51.77-32.35a8,8,0,0,0-8.48,0L72,209.57V48H184Z" />
                 </svg>
                 <span className="text-sm font-medium">
-                  {data.favorites.length}
+                  {typeof data === "string"
+                    ? 0
+                    : (data as RecipeArray).favorites.length}
                 </span>
               </button>
             </div>
@@ -171,7 +272,7 @@ export default function RecipeInfo() {
               </div>
             </div>
           </div>
-        </div>
+        </section>
       </main>
     );
 }

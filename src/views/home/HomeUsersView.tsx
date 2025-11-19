@@ -53,10 +53,10 @@ export default function HomeUsersView({ data }: { data?: UserSocial[] }) {
   } else {
     if (isLoading) return <Spinner />;
     if (isError) {
-      console.error("HomeUsersView: paged users load failed", {
-        pagedData,
-        error,
-      });
+      // console.error("HomeUsersView: paged users load failed", {
+      //   pagedData,
+      //   error,
+      // });
       return (
         <div className="text-sm text-red-600">
           Error loading users: {error?.message ?? "Unknown error"}
@@ -75,7 +75,7 @@ export default function HomeUsersView({ data }: { data?: UserSocial[] }) {
   const filteredData = filterUsers(usersToRender, searchTerm);
 
   return (
-    <section className="max-w-5xl mx-auto py-8 px-4">
+    <section className="max-w-5xl mx-auto py-8 px-4 mb-10">
       <header className="mb-6">
         <h2 className="text-3xl font-bold text-[#0f172a] dark:text-[#e2e8f0]">
           Users
@@ -89,7 +89,7 @@ export default function HomeUsersView({ data }: { data?: UserSocial[] }) {
         <input
           type="text"
           placeholder="Search users..."
-          className="w-full p-2 border border-gray-300 rounded-md mb-6 focus:outline-none focus:ring-2 focus:ring-green-950/50 focus:border-green-950/80 dark:bg-[#2a2a2a] dark:border-[#334155] dark:focus:border-[#c9ad80] dark:focus:ring-0 dark:text-[#e2e8f0] dark:placeholder-[#94a3b8]"
+          className="w-full p-2 border-2 border-gray-600 rounded-md mb-6 focus:outline-none focus:ring-2 focus:ring-green-950/50 focus:border-green-950/80 dark:bg-[#2a2a2a] dark:border-[#334155] dark:focus:border-[#c9ad80] dark:focus:ring-0 dark:text-[#e2e8f0] dark:placeholder-[#94a3b8]"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />

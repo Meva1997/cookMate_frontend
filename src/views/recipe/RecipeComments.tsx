@@ -74,7 +74,7 @@ export default function RecipeComments() {
             {data && data.length ? (
               data.map((comment: Comment) => (
                 <section
-                  className="flex items-center justify-between gap-4"
+                  className="flex items-center justify-between gap-4 border-b pb-4"
                   key={comment._id}
                 >
                   <Link to={`/admin/${comment.author._id}`}>
