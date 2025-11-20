@@ -4,6 +4,7 @@ import { getUserProfileData } from "../api/CookMateAPI";
 import type { UserLoggedIn } from "../types";
 import Logo from "../components/Logo";
 import { Toaster } from "sonner";
+import FooterInfo from "../components/FooterInfo";
 
 export default function HomeLayout() {
   const { data } = useQuery<UserLoggedIn>({
@@ -61,6 +62,9 @@ export default function HomeLayout() {
         <main className=" grow container mx-auto px-6 py-8">
           <Outlet />
         </main>
+
+        <FooterInfo />
+
         <Toaster position="top-right" richColors />
       </div>
     );

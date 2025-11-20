@@ -1,6 +1,7 @@
 import { Outlet, Link } from "react-router-dom";
 import { Toaster } from "sonner";
 import Logo from "../components/Logo";
+import FooterInfo from "../components/FooterInfo";
 
 export default function ProfileLayout() {
   return (
@@ -31,6 +32,7 @@ export default function ProfileLayout() {
         <main className="flex-1 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <Outlet />
         </main>
+        <FooterInfo />
       </div>
       <Toaster position="top-right" richColors />
     </div>

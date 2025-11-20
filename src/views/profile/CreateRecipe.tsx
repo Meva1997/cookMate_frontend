@@ -6,12 +6,14 @@ import api from "../../config/axios";
 import type { CreateRecipeForm } from "../../types";
 import ErrorMessage from "../../components/ErrorMessage";
 import { categories } from "../../db";
-import { useMutation } from "@tanstack/react-query";
-import { uploadRecipeImage } from "../../api/CookMateAPI";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { getUserProfileData, uploadRecipeImage } from "../../api/CookMateAPI";
 import { useEffect, useState } from "react";
+import Spinner from "../../components/Spinner";
 
 export default function CreateRecipe() {
   const { userId } = useParams<{ userId: string }>();
+  const [imagePreview, setImagePreview] = useState<string>("");
   const initialValues: CreateRecipeForm = {
     title: "",
     description: "",
@@ -30,7 +32,14 @@ export default function CreateRecipe() {
     formState: { errors, isSubmitting },
   } = useForm({ defaultValues: initialValues });
 
-  const [imagePreview, setImagePreview] = useState<string>("");
+  const { data: meData, isLoading } = useQuery({
+    queryKey: ["userProfileData"],
+    queryFn: () => getUserProfileData(),
+    retry: 1,
+    refetchOnWindowFocus: false,
+  });
+
+  const currentUser = meData?.id === userId;
 
   const handleCreateRecipe = (formData: CreateRecipeForm) => {
     const img = formData.image ?? watch("image");
@@ -100,6 +109,21 @@ export default function CreateRecipe() {
       uploadImageMutation.mutate(e.target.files[0]);
     }
   };
+
+  if (!currentUser) {
+    return (
+      <div className="flex flex-col justify-center items-center h-64">
+        <p className="text-red-500">
+          You do not have permission to create a recipe for this user.
+        </p>
+        <Link to="/home" className="text-blue-500 hover:underline mt-2">
+          Go back to home
+        </Link>
+      </div>
+    );
+  } else if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
     <main className="flex grow container max-w-5xl mx-auto py-8 md:py-12">
