@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { QueryCache, useMutation, useQueryClient } from "@tanstack/react-query";
 import { postComment } from "../../api/CookMateAPI";
 import { useForm } from "react-hook-form";
 import ErrorMessage from "../../components/ErrorMessage";
@@ -41,13 +41,23 @@ export default function CreateComment({ recipeId }: createCommentProps) {
     mutation.mutate(commentText);
   };
 
+  const queryCache = queryClient.getQueryCache() as QueryCache;
+  const queryUserProfileInfo = queryCache.find({
+    queryKey: ["userProfileInfo"],
+  });
+  const meData = queryUserProfileInfo?.state.data as { id: string } | undefined;
+  const query = queryCache.find({ queryKey: ["userImage", meData?.id] });
+  const userImage = query?.state.data as { imageUrl: string } | undefined;
+
   return (
     <>
       <div className="flex items-start gap-4">
         <div
           className="h-10 w-10 shrink-0 rounded-full bg-cover bg-center"
           style={{
-            backgroundImage: "url('https://picsum.photos/seed/c1/200')",
+            backgroundImage: userImage
+              ? `url(${userImage.imageUrl})`
+              : "url('https://picsum.photos/seed/c2/200')",
           }}
         />
         <div className="flex-1">
