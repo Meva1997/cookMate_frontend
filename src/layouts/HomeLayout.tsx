@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link, Outlet } from "react-router-dom";
-import { getUserProfileData } from "../api/CookMateAPI";
+import { getUserImageById, getUserProfileData } from "../api/CookMateAPI";
 import type { UserLoggedIn } from "../types";
 import Logo from "../components/Logo";
 import { Toaster } from "sonner";
@@ -10,6 +10,14 @@ export default function HomeLayout() {
   const { data } = useQuery<UserLoggedIn>({
     queryKey: ["userProfileInfo"],
     queryFn: () => getUserProfileData(),
+    retry: 1,
+    refetchOnWindowFocus: false,
+  });
+
+  const { data: imageUrl } = useQuery({
+    queryKey: ["userImage", data?.id],
+    queryFn: () => getUserImageById(data!.id),
+    enabled: !!data?.id,
     retry: 1,
     refetchOnWindowFocus: false,
   });
@@ -40,8 +48,10 @@ export default function HomeLayout() {
                   <div
                     className="w-10 h-10 rounded-full bg-cover bg-center"
                     style={{
-                      backgroundImage:
-                        "url('https://picsum.photos/seed/avatar/200')",
+                      backgroundImage: `url(${
+                        imageUrl?.imageUrl ??
+                        "https://picsum.photos/seed/avatar/200"
+                      })`,
                     }}
                   />
                 </>

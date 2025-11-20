@@ -119,7 +119,7 @@ export default function UserRecipes({ user }: UserRecipesProps) {
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center space-x-4  mt-4">
+                <div className="flex items-center justify-center space-x-4  mt-4">
                   <Link
                     to={`/user/${user.id}/recipe/${recipe._id}`}
                     className="px-5 py-2 rounded-lg dark:bg-[#d2b48c]/20 dark:hover:bg-[#d2b48c]/30 dark:text-[#d2b48c] font-bold text-sm bg-green-950/80 text-white transition-colors hover:bg-green-950"

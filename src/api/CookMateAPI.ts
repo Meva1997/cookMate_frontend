@@ -251,3 +251,27 @@ export async function unfavoriteRecipe(recipeId: string) {
     }
   }
 }
+
+export async function uploadUserImage(file: File, userId: string) {
+  const formData = new FormData();
+  formData.append("file", file);
+  try {
+    const { data } = await api.post(`/user/${userId}/image`, formData);
+    return data;
+  } catch (err) {
+    if (isAxiosError(err) && err.response?.data?.error) {
+      return String(err.response.data.error);
+    }
+  }
+}
+
+export async function getUserImageById(userId: string) {
+  try {
+    const { data } = await api.get(`/user/${userId}/image`);
+    return data;
+  } catch (err) {
+    if (isAxiosError(err) && err.response?.data?.error) {
+      return String(err.response.data.error);
+    }
+  }
+}

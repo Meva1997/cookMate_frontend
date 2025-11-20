@@ -2,8 +2,13 @@ import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import UserRecipes from "./UserRecipes";
 import UserFavorites from "./UserFavorites";
+import ProfileImageUploader from "../../components/ProfileImageUploader";
 import { useQuery } from "@tanstack/react-query";
-import { getUserById, getUserProfileData } from "../../api/CookMateAPI";
+import {
+  getUserById,
+  getUserImageById,
+  getUserProfileData,
+} from "../../api/CookMateAPI";
 import Spinner from "../../components/Spinner";
 import LogoutButton from "../../components/LogoutButton";
 import type { UserLoggedIn } from "../../types";
@@ -26,6 +31,13 @@ export default function UserProfileView() {
   const { data: meData } = useQuery<UserLoggedIn>({
     queryKey: ["userProfileInfo"],
     queryFn: () => getUserProfileData(),
+    retry: 1,
+    refetchOnWindowFocus: false,
+  });
+
+  const { data: userImageData } = useQuery({
+    queryKey: ["userImage", userId],
+    queryFn: () => getUserImageById(userId!),
     retry: 1,
     refetchOnWindowFocus: false,
   });
@@ -54,12 +66,15 @@ export default function UserProfileView() {
     <>
       <div className="flex flex-col items-center gap-6">
         <section className="relative">
-          <div
-            className="w-32 h-32 rounded-full bg-cover bg-center shadow-lg"
-            style={{
-              backgroundImage:
-                "url('https://lh3.googleusercontent.com/aida-public/AB6AXuBfWDSNAtxWHxHrdZK_HhV79-xROcZcsNSqo-DwSj4XYP_rVQChKOLW30r68j9UQpxI9A7uMvTfmOCEudCqLFH7VcgHF9eyZm5c0vsbhNJOQls01VbO4fsqrDddMtFF6JhvUlAaC3NW4oqYvW5UaAXqHUxoJGFVTvTOhBzhK5-UgeI8sMBDTnvBkbWC4oXiCgkdAtST8lghM0J-_U8u5KwjIJdNExE_cfLlEJYdHUGRXH-SjhmbTAY0X-TRfceRUtD4D4yrkDmSIDQ')",
-            }}
+          {/* Replace avatar div with ProfileImageUploader to allow owner to upload */}
+          <ProfileImageUploader
+            userId={userId!}
+            imageUrl={
+              userImageData?.imageUrl
+                ? userImageData.imageUrl
+                : "https://picsum.photos/seed/avatar/200"
+            }
+            isOwner={currentUser}
           />
         </section>
 
