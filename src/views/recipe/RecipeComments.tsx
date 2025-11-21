@@ -1,9 +1,4 @@
-import {
-  QueryCache,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   deleteComment,
   getAllComments,
@@ -62,10 +57,6 @@ export default function RecipeComments() {
       setDeletingId(null);
     }
   };
-  const queryCache = queryClient.getQueryCache() as QueryCache;
-
-  const query = queryCache.find({ queryKey: ["userImage", meData?.id] });
-  const userImage = query?.state.data as { imageUrl: string } | undefined;
 
   return (
     <>
@@ -90,9 +81,10 @@ export default function RecipeComments() {
                     <div
                       className="h-10 w-10 shrink-0 rounded-full bg-cover bg-center"
                       style={{
-                        backgroundImage: userImage
-                          ? `url(${userImage.imageUrl})`
-                          : "url('https://picsum.photos/seed/c2/200')",
+                        backgroundImage: `url(${
+                          comment.authorImage ||
+                          "https://picsum.photos/seed/c2/200"
+                        })`,
                       }}
                     />
                   </Link>

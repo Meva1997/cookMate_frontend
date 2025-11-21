@@ -29,10 +29,22 @@ export default function FooterInfo() {
           </div>
         </div>
         <div className="px-4">
-          <p className="text-center text-sm text-black dark:text-gray-400">
-            This is a personal project created to showcase my skills and
-            portfolio work. It is not affiliated with any company or
-            organization and is provided for demonstration purposes only.
+          <p className="text-center text-sm text-black dark:text-gray-400 mt-2">
+            <span className="text-green-900 font-bold text-md">
+              Please note:
+            </span>{" "}
+            some recipe text content may have been generated with the assistance
+            of artificial intelligence. Images used in the recipes are shown
+            solely to demonstrate the project and for non-commercial,
+            illustrative purposes. Users are encouraged to upload and use their
+            own photos or otherwise ensure they have the rights to any images
+            before publishing. This project is strictly a personal portfolio
+            demonstration of my skills and is not intended for commercial use.
+            This notice is for informational purposes and does not constitute
+            legal advice. I do not intend to claim, reproduce, or profit from
+            anyone else's work; if you believe any content on this site
+            improperly uses your work, please contact me and I will promptly
+            address it.
           </p>
         </div>
 

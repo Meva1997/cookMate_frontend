@@ -25,7 +25,8 @@ export default function CreateComment({ recipeId }: createCommentProps) {
   });
 
   const mutation = useMutation({
-    mutationFn: (commentText: string) => postComment(recipeId, commentText),
+    mutationFn: (commentText: string) =>
+      postComment(recipeId, commentText, userImage?.imageUrl || ""),
     onSuccess: (data) => {
       toast.success(data || "Comment posted successfully!");
       queryClient.invalidateQueries({ queryKey: ["recipeComments", recipeId] });

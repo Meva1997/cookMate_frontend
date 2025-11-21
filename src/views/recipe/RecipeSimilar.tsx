@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getRecipesByCategory } from "../../api/CookMateAPI";
+import { getAllRecipes } from "../../api/CookMateAPI";
 import Spinner from "../../components/Spinner";
 import { Link } from "react-router-dom";
 import type { RecipeArray } from "../../types";
@@ -13,29 +13,22 @@ export default function RecipeSimilar({
   data: category,
   currentId,
 }: RecipeSimilarProps) {
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ["recipesByCategory", category],
-    queryFn: () => getRecipesByCategory(category, 1, 6),
-    enabled: Boolean(category),
+  const {
+    data: recipesData,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["allRecipes"],
+    queryFn: () => getAllRecipes(1, 20) as Promise<{ recipes: RecipeArray[] }>,
     retry: 1,
     refetchOnWindowFocus: false,
   });
 
-  // normalize response: API may return array or paged object
-  const recipes = Array.isArray(data)
-    ? data
-    : data?.recipes ?? data?.items ?? data?.data ?? [];
-
-  // Filter recipes client-side by category (case-insensitive) and limit to 6
-  const allRecipes = Array.isArray(recipes) ? (recipes as RecipeArray[]) : [];
-  const filteredRecipes = allRecipes
-    .filter(
-      (r) =>
-        (r.category ?? "").toString().toLowerCase() ===
-        category.toString().toLowerCase()
-    )
-    .filter((r) => r._id !== currentId)
-    .slice(0, 6);
+  const filteredRecipes: RecipeArray[] = recipesData
+    ? recipesData?.recipes.filter(
+        (r: RecipeArray) => r.category === category && r._id !== currentId
+      )
+    : [];
 
   if (!category) return null;
 
@@ -56,11 +49,12 @@ export default function RecipeSimilar({
   return (
     <>
       <h3 className="text-xl font-bold text-[#1f1f1f] dark:text-[#f0eade]">
-        Similar Recipes
+        Similar Recipes by Category:{" "}
+        <span className="text-[#d2b48c] font-bold">{category}</span>
       </h3>
       <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3 md:gap-x-6">
-        {filteredRecipes && filteredRecipes.length ? (
-          filteredRecipes.map((r) => (
+        {filteredRecipes && filteredRecipes.length > 0 ? (
+          filteredRecipes.map((r: RecipeArray) => (
             <Link
               key={r._id}
               to={`/user/${r.author._id}/recipe/${r._id}`}

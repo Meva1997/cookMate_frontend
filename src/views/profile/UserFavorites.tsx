@@ -16,7 +16,6 @@ export default function UserFavorites({ user }: UserFavoritesProps) {
     retry: 1,
     refetchOnWindowFocus: false,
   });
-  console.log("🚀 ~ UserFavorites ~ data:", data);
 
   if (isLoading) {
     return (
@@ -74,7 +73,10 @@ export default function UserFavorites({ user }: UserFavoritesProps) {
                   Title: {recipe.title}
                 </h3>
                 <p className="text-sm text-[#64748b] dark:text-[#94a3b8] mt-2 max-h-12 overflow-hidden">
-                  Description: {recipe.description}
+                  {recipe.description}
+                </p>
+                <p className="text-sm text-[#64748b] dark:text-[#94a3b8] mt-2 max-h-12 overflow-hidden">
+                  By: {recipe.author.name}
                 </p>
                 <div className="mt-3 flex items-center justify-between">
                   <div className="flex items-center space-x-3">

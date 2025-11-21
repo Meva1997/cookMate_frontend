@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { isAxiosError } from "axios";
 import { toast } from "sonner";
@@ -12,6 +12,7 @@ import HidePassword from "../../components/HidePassword";
 export default function RegisterView() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const navigate = useNavigate();
 
   const initialValues: RegisterForm = {
     handle: "",
@@ -39,7 +40,8 @@ export default function RegisterView() {
       success: (res) => {
         // res is the axios response object; return a string to show in the toast
         reset();
-        return String(res.data);
+        navigate("/auth/login");
+        return String(res.data); // show server success message
       },
       error: (err) => {
         // optional: return server error message if available

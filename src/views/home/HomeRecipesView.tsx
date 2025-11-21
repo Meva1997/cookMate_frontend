@@ -59,7 +59,7 @@ export default function HomeRecipesView() {
   return (
     <article>
       <section className="my-8">
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           {categories.map((category) => (
             <button
               key={category}
@@ -98,6 +98,9 @@ export default function HomeRecipesView() {
                 <h3 className="text-md font-semibold text-[#0f172a] dark:text-[#e2e8f0] truncate">
                   Title: {c.title}
                 </h3>
+                <p className="text-sm text-[#64748b] dark:text-[#94a3b8] mt-2">
+                  {c.description}
+                </p>
                 <p className="text-sm text-[#64748b] dark:text-[#94a3b8] mt-2">
                   By: {c.author.name}
                 </p>

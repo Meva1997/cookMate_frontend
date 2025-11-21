@@ -12,7 +12,7 @@ import { Link, useParams } from "react-router-dom";
 import Spinner from "../../components/Spinner";
 import RecipeComments from "./RecipeComments";
 import RecipeSimilar from "./RecipeSimilar";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 
 export default function RecipeInfo() {
   const { recipeId } = useParams<{ recipeId: string }>();
@@ -123,12 +123,14 @@ export default function RecipeInfo() {
     return (
       <main className="container mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
         <section className="flex space-x-2 ">
-          <div className="mb-4 p-2 dark:bg-[#c9ad80] rounded-lg w-1/4 dark:text-black font-bold text-center dark:hover:bg-[#bfa46f] cursor-pointer transition-colors bg-green-950/80 text-white hover:bg-green-950">
-            <Link to={`/admin/${userId}`}>Go to author's profile</Link>
-          </div>
-          <div className="mb-4 p-2 dark:bg-[#c9ad80] rounded-lg w-1/4 dark:text-black font-bold text-center dark:hover:bg-[#bfa46f] cursor-pointer transition-colors bg-green-950/80 text-white hover:bg-green-950">
-            <Link to={"/home"}>Back to home</Link>
-          </div>
+          <Suspense fallback={<Spinner />}>
+            <div className="mb-4 p-2 dark:bg-[#c9ad80] rounded-lg w-1/4 dark:text-black font-bold text-center dark:hover:bg-[#bfa46f] cursor-pointer transition-colors bg-green-950/80 text-white hover:bg-green-950">
+              <Link to={`/admin/${userId}`}>Go to author's profile</Link>
+            </div>
+            <div className="mb-4 p-2 dark:bg-[#c9ad80] rounded-lg w-1/4 dark:text-black font-bold text-center dark:hover:bg-[#bfa46f] cursor-pointer transition-colors bg-green-950/80 text-white hover:bg-green-950">
+              <Link to={"/home"}>Back to home</Link>
+            </div>
+          </Suspense>
         </section>
         <section className="overflow-hidden rounded-xl shadow-lg shadow-black bg-[#f8f5f2] dark:bg-[#2a2a2a]">
           <div
@@ -268,7 +270,9 @@ export default function RecipeInfo() {
               style={{ borderColor: "rgba(210,180,140,0.2)" }}
             >
               <div className="pt-8">
-                <RecipeSimilar data={data.category} currentId={data._id} />
+                <Suspense fallback={<Spinner />}>
+                  <RecipeSimilar data={data.category} currentId={data._id} />
+                </Suspense>
               </div>
             </div>
           </div>

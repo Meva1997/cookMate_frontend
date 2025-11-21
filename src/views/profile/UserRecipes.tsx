@@ -78,7 +78,7 @@ export default function UserRecipes({ user }: UserRecipesProps) {
                 <h3 className="text-md font-semibold text-[#0f172a] dark:text-[#e2e8f0] truncate">
                   Title: {recipe.title}
                 </h3>
-                <p className="text-sm text-[#64748b] dark:text-[#94a3b8] mt-2 max-h-12 overflow-hidden">
+                <p className="text-sm text-[#64748b] dark:text-[#94a3b8] mt-2">
                   Description: {recipe.description}
                 </p>
                 <div className="mt-3 flex items-center justify-start ">

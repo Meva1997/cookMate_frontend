@@ -182,10 +182,15 @@ export async function getAllComments(recipeId: string) {
   }
 }
 
-export async function postComment(recipeId: string, commentText: string) {
+export async function postComment(
+  recipeId: string,
+  commentText: string,
+  authorImage: string
+) {
   try {
     const { data } = await api.post(`/recipes/${recipeId}/comments`, {
       text: commentText,
+      authorImage,
     });
     return data;
   } catch (err) {

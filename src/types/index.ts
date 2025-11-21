@@ -89,6 +89,7 @@ export type Comment = {
     handle: string;
     name: string;
   };
+  authorImage: string;
   recipe: string;
   text: string;
   createdAt: string;
