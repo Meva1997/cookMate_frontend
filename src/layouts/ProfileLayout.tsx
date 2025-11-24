@@ -7,7 +7,7 @@ export default function ProfileLayout() {
   return (
     <div className="min-h-screen bg-gray-300 dark:bg-black font-display text-slate-800 dark:text-slate-200">
       <div className="relative flex min-h-screen w-full flex-col">
-        <header className="flex items-center justify-between whitespace-nowrap border-b border-slate-200 dark:border-slate-800 px-6 md:px-10 py-3 bg-white dark:bg-black">
+        <header className="flex items-center justify-between whitespace-nowrap border-b border-slate-200 dark:border-slate-800 px-6 md:px-10 py-3 bg-white dark:bg-black mx-auto w-full max-w-7xl">
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-2 text-slate-900 dark:text-white">
               <Logo />

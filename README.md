@@ -17,6 +17,16 @@ This README documents how to run the project and summarizes the most relevant pa
 - Sonner for toasts/notifications
 - pnpm (recommended) for package management; npm/yarn supported
 
+## Recent additions
+
+- Landing page (`/`) with project overview and 'Enter the App' CTA.
+- Profile image uploader component with Cloudinary uploads and client-side preview.
+- Unified `RecipeForm` component reused by create & edit recipe pages.
+- Pagination support on backend + frontend; `useInfiniteQuery` used in list views.
+- Optimistic updates for comments and per-item delete UI improvements.
+- Backend/Frontend fixes for favorites/likes sync and author population in favorites endpoint.
+- Defensive Cloudinary handling: previous profile image deletion and robust upload parsing.
+
 Recent features in this codebase
 
 - Paginated APIs for recipes and users (`getAllRecipes` and `getAllUsersPaged`) with frontend use of `useInfiniteQuery`.
@@ -28,9 +38,89 @@ Recent features in this codebase
 
 ## Screenshots
 
-![Pantalla de inicio de sesión de cookMate](./public/cookMate-login.png)
+## Screenshots
 
-Login page showing the email and password fields.
+Below is a compact gallery of UI screenshots (images come from `frontend/public`). The grid uses HTML so it renders consistently on GitHub.
+
+<table>
+  <tr>
+    <td align="center">
+      <figure>
+        <img src="./public/cookMate-login.png" alt="Login view" width="300" />
+        <figcaption>Login</figcaption>
+      </figure>
+    </td>
+    <td align="center">
+      <figure>
+        <img src="./public/registerView.png" alt="Register view" width="300" />
+        <figcaption>Register</figcaption>
+      </figure>
+    </td>
+    <td align="center">
+      <figure>
+        <img src="./public/landingView.png" alt="Landing view" width="300" />
+        <figcaption>Landing / Entry</figcaption>
+      </figure>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <figure>
+        <img src="./public/homeView.png" alt="Home recipes view" width="300" />
+        <figcaption>Home (recipes)</figcaption>
+      </figure>
+    </td>
+    <td align="center">
+      <figure>
+        <img src="./public/homeUsersView.png" alt="Home users view" width="300" />
+        <figcaption>Home (users)</figcaption>
+      </figure>
+    </td>
+    <td align="center">
+      <figure>
+        <img src="./public/recipeInfo.png" alt="Recipe info" width="300" />
+        <figcaption>Recipe details</figcaption>
+      </figure>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <figure>
+        <img src="./public/recipeComments.png" alt="Recipe comments" width="300" />
+        <figcaption>Comments</figcaption>
+      </figure>
+    </td>
+    <td align="center">
+      <figure>
+        <img src="./public/createRecipe.png" alt="Create recipe" width="300" />
+        <figcaption>Create recipe</figcaption>
+      </figure>
+    </td>
+    <td align="center">
+      <figure>
+        <img src="./public/logguedUserView.png" alt="Logged user view" width="300" />
+        <figcaption>Profile (logged user)</figcaption>
+      </figure>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <figure>
+        <img src="./public/logguedUserFavorites.png" alt="Logged user favorites" width="300" />
+        <figcaption>Favorites</figcaption>
+      </figure>
+    </td>
+    <td align="center">
+      <figure>
+        <img src="./public/unauthorizedProfileView.png" alt="Unauthorized profile view" width="300" />
+        <figcaption>Unauthorized profile</figcaption>
+      </figure>
+    </td>
+    <td></td>
+  </tr>
+</table>
+
+_Images are included for convenience — open the app locally to interact with the UI._
 
 ---
 
@@ -134,8 +224,14 @@ Important folders
   ```
 - `GET /user?page=1&limit=20` → returns paged users: `{ users: [...], page, limit, total, hasMore }`.
 - `POST /recipes/upload-image` — accepts multipart/form-data and returns `{ imageUrl: "https://..." }`.
+- `POST /recipes/upload-image` — accepts multipart/form-data and returns `{ imageUrl: "https://..." }`.
+- `POST /user/:userId/image` — accepts multipart/form-data, uploads to Cloudinary and returns `{ imageUrl: "https://...", user: {...} }`; backend may also persist `user.image`.
 - `PUT /recipes/:id` — update recipe; server checks author ownership.
 - `DELETE /recipes/:id` — delete recipe; server checks author ownership and removes references.
+
+Notes:
+
+- `GET /user/:userId/favorites` returns recipe objects; recent backend updates populate the `author` field (e.g. `author.name`, `author.handle`, `author.image`).
 
 The frontend includes helpers and components that assume these shapes (see `src/api/CookMateAPI.ts` and the `HomeRecipesView` / `HomeUsersView` implementations).
 

@@ -7,6 +7,7 @@ import UserProfileView from "./views/profile/UserProfileView";
 import CreateRecipe from "./views/profile/CreateRecipe";
 import UserEditProfile from "./views/profile/UserEditProfile";
 import HomeLayout from "./layouts/HomeLayout";
+import LandingView from "./views/LandingView";
 import RecipeInfo from "./views/recipe/RecipeInfo";
 import HomeView from "./views/home/HomeView";
 import EditRecipeInfo from "./views/profile/EditRecipeInfo";
@@ -25,6 +26,7 @@ export default function Router() {
           <Route path=":userId/edit" element={<UserEditProfile />} />
         </Route>
         <Route path="/" element={<HomeLayout />}>
+          <Route index element={<LandingView />} />
           <Route path="/home" element={<HomeView />} />
           <Route
             path="/user/:userId/recipe/:recipeId"

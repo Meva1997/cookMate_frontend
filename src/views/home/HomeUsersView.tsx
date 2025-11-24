@@ -75,7 +75,7 @@ export default function HomeUsersView({ data }: { data?: UserSocial[] }) {
   const filteredData = filterUsers(usersToRender, searchTerm);
 
   return (
-    <section className="max-w-5xl mx-auto py-8 px-4 mb-10">
+    <section className="max-w-7xl mx-auto py-8 px-4 mb-10">
       <header className="mb-6">
         <h2 className="text-3xl font-bold text-[#0f172a] dark:text-[#e2e8f0]">
           Users
@@ -95,7 +95,7 @@ export default function HomeUsersView({ data }: { data?: UserSocial[] }) {
         />
       </article>
 
-      <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {filteredData.map((user) => (
           <li
             key={user._id}
