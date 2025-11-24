@@ -27,7 +27,7 @@ export default function Router() {
         </Route>
         <Route path="/" element={<HomeLayout />}>
           <Route index element={<LandingView />} />
-          <Route path="/home" element={<HomeView />} />
+          <Route path="home" element={<HomeView />} />
           <Route
             path="/user/:userId/recipe/:recipeId"
             element={<RecipeInfo />}
