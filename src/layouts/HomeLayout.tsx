@@ -22,60 +22,59 @@ export default function HomeLayout() {
     refetchOnWindowFocus: false,
   });
 
-  if (data)
-    return (
-      <div className="flex flex-col min-h-screen bg-gray-300  dark:bg-black font-display  dark:text-white">
-        <header className="sticky top-0 z-50 backdrop-blur-sm bg-white dark:bg-black">
-          <nav className="container mx-auto px-6 py-4 flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Logo className="h-8 w-8 text-green-950/80 dark:text-white" />
-              <Link to="/home">
-                <h1 className="text-2xl font-bold text-black dark:text-green-900">
-                  CookMate
-                </h1>
-              </Link>
-            </div>
+  return (
+    <div className="flex flex-col min-h-screen bg-gray-300  dark:bg-black font-display  dark:text-white">
+      <header className="sticky top-0 z-50 backdrop-blur-sm bg-white dark:bg-black">
+        <nav className="container mx-auto px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Logo className="h-8 w-8 text-green-950/80 dark:text-white" />
+            <Link to="/home">
+              <h1 className="text-2xl font-bold text-black dark:text-green-900">
+                CookMate
+              </h1>
+            </Link>
+          </div>
 
-            <div className="flex items-center gap-4">
-              {data.id ? (
-                <>
-                  <Link
-                    to={`/admin/${data.id}`}
-                    className="font-black hover:underline text-xl dark:text-green-900"
-                  >
-                    {data.handle}
-                  </Link>
-                  <div
-                    className="w-10 h-10 rounded-full bg-cover bg-center"
-                    style={{
-                      backgroundImage: `url(${
-                        imageUrl?.imageUrl ??
-                        "https://picsum.photos/seed/avatar/200"
-                      })`,
-                    }}
-                  />
-                </>
-              ) : (
-                <>
-                  <Link
-                    to="/auth/login"
-                    className="dark:bg-[#c9ad80] bg-green-950/80 text-white px-4 py-2 rounded-md font-medium hover:opacity-90 dark:text-black"
-                  >
-                    Log In
-                  </Link>
-                </>
-              )}
-            </div>
-          </nav>
-        </header>
+          <div className="flex items-center gap-4">
+            {data?.id ? (
+              <>
+                <Link
+                  to={`/admin/${data.id}`}
+                  className="font-black hover:underline text-xl dark:text-green-900"
+                >
+                  {data.handle}
+                </Link>
+                <div
+                  className="w-10 h-10 rounded-full bg-cover bg-center"
+                  style={{
+                    backgroundImage: `url(${
+                      imageUrl?.imageUrl ??
+                      "https://picsum.photos/seed/avatar/200"
+                    })`,
+                  }}
+                />
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/auth/login"
+                  className="dark:bg-[#c9ad80] bg-green-950/80 text-white px-4 py-2 rounded-md font-medium hover:opacity-90 dark:text-black"
+                >
+                  Log In
+                </Link>
+              </>
+            )}
+          </div>
+        </nav>
+      </header>
 
-        <main className=" grow container mx-auto px-6 py-8">
-          <Outlet />
-        </main>
+      <main className=" grow container mx-auto px-6 py-8">
+        <Outlet />
+      </main>
 
-        <FooterInfo />
+      <FooterInfo />
 
-        <Toaster position="top-right" richColors />
-      </div>
-    );
+      <Toaster position="top-right" richColors />
+    </div>
+  );
 }
