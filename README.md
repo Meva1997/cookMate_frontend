@@ -6,6 +6,14 @@ This README documents how to run the project and summarizes the most relevant pa
 
 ---
 
+## Live demo
+
+A live demo of this project is deployed on Netlify and available at:
+
+[https://cookmate-mevadev.netlify.app/](https://cookmate-mevadev.netlify.app/)
+
+---
+
 ## Highlights
 
 - React + TypeScript
@@ -35,8 +43,6 @@ Recent features in this codebase
 - Shared `Logo` component and other small UI components (`Spinner`, `DeletionConfirm`, `ShowPassword`, `HidePassword`, etc.).
 
 ---
-
-## Screenshots
 
 ## Screenshots
 
