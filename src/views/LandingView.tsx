@@ -61,8 +61,8 @@ export default function LandingView() {
             </p>
             <p className="text-sm text-slate-700 dark:text-slate-300">
               Email:{" "}
-              <a className="underline" href="mailto:alexmedval2@gmail.com">
-                alexmedval2@gmail.com
+              <a className="underline" href="mailto:mevadev97@gmail.com">
+                mevadev97@gmail.com
               </a>
             </p>
             <p className="text-sm text-slate-700 dark:text-slate-300">
