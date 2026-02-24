@@ -20,8 +20,8 @@ export default class ErrorBoundary extends React.Component<Props, State> {
   }
 
   componentDidCatch(error: Error, info: unknown) {
-    // Aquí podrías reportar a Sentry/Logs si quieres
-    // console.error("ErrorBoundary caught", error, info);
+    // Log error for debugging and monitoring
+    console.error("ErrorBoundary caught", error, info);
   }
 
   reset = () => {
